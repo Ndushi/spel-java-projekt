@@ -125,7 +125,7 @@ public class character {
 			this.frame=0;
                         return;
 		}
-		double in=0.15;
+		double in=0.09;
 		if(res==-1)return;
 		else if(res==0){
                     if(this.x*radius>this.x2){
