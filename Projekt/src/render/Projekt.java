@@ -29,6 +29,7 @@ public class Projekt extends Render{
 		focus.setChar("/res/CharMain/firehero.gif");
 		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/testWorld");
 	}
+	int delay=0;
 	/**
 	 * tick är medlem av Render och anropas varje loopintervall och här kollar vi då om det har tryckts ner någon tangent
 	 * @param k boolean[]
@@ -39,11 +40,16 @@ public class Projekt extends Render{
 		boolean right=k[KeyEvent.VK_D]||k[KeyEvent.VK_RIGHT];
 		boolean up=k[KeyEvent.VK_W]||k[KeyEvent.VK_UP];
 		boolean down=k[KeyEvent.VK_S]||k[KeyEvent.VK_DOWN];
-		if(k[KeyEvent.VK_ESCAPE]){
+		if(k[KeyEvent.VK_ESCAPE]||this.exitCode==1){
+			this.exitCode=1;
 			return;
 		}
                 if (!(left || right || up || down))
-                    this.focus.frame=0;
+			delay++;
+		else
+			delay=0;
+		if(delay>=15)
+			this.focus.frame=0;
 		//X-axeln
 		if(this.focus.y-this.focus.y2/radius==0&&!up&&!down){
 			if((left&&!right)&&(this.focus.x-this.focus.x2/radius>=0)&&focus.x>1&&this.world.canGo(this.focus.x-1, this.focus.y)){
@@ -99,7 +105,7 @@ public class Projekt extends Render{
 		//BufferedImage t =focus.c.getSubimage(27*focus.direciton, 50*(((int)focus.frame)%4), 27, 50);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
                 g.setColor(new Color(0x666666));
-                g.setFont(new Font(null,Font.BOLD, 12));
+                g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
                 drawShadowWithString("Alphamap, version: 0.4", 2, 12, g, Color.white, new Color(0x666666));
 	}
         public void drawShadowWithString(String string, int x, int y, Graphics g, Color c1, Color c2){
