@@ -62,8 +62,10 @@ public class Runner extends JFrame implements Runnable {
 	    while (tickInt > secperTick) {
 		eCheck(game.eHandle.keys);
 		tickInt -= secperTick;
-		if(game.exitCode==1)
+		if(game.exitCode==1){
 			this.dispose();
+                        this.stop();
+                }
 		ticked = true;
 		tickCount++;
 		if (tickCount % 60 == 0) {

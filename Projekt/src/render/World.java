@@ -7,15 +7,11 @@ import java.io.File;
 import javax.swing.ImageIcon;
 
 /**
- *  World har koll på all grafik och saker som skall vara utlaggda på nuvarande bana denna klassen skall ha subklasser utformade effter vad
+ *  World har koll på all grafik och saker som skall vara utlagda på nuvarande bana denna klassen skall ha subklasser utformade effter vad
  *  man vill ha för värld
  * @author johannes
  */
 public class World {
-	/**
-	 * lutingen på spelplanen beskrivs med angle i radianer
-	 */
-	public double angle=75*Math.PI/180;
 	/**
 	 * berdden på världens layout bild
 	 */
@@ -48,7 +44,7 @@ public class World {
 			throw new RuntimeException("World,"+this.path+", does not exist!");
 		for(int im = 0;im < data.length; im++){
 			if(data[im].isFile()){
-				if(data[im].getName().equals("metal_box.jpg")){
+				if(data[im].getName().equals("graphics.jpg")){
 					this.layout= new ImageIcon(data[im].getPath());
 				}
 				if(data[im].getName().equals("alpha.png")){
@@ -56,13 +52,9 @@ public class World {
 				}
 			}
 		}
-		this.width=this.alpha.getIconWidth();//*20;
-		this.height=this.alpha.getIconHeight();//*20;
+		this.width=this.alpha.getIconWidth();
+		this.height=this.alpha.getIconHeight();
 	}
-	/*public Graphics paint(Graphics g){
-		g.drawImage(hics, width, width, hics);
-		return g;
-	}*/
 	/**
 	 * @param x positionen på x
 	 * @param y positionen på y

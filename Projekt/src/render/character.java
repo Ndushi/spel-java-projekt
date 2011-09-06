@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 /**
- * denna funktionen konrollerar karaktärens rörelser och data ex Grafik på hur karaktären skall se ut i olika vilnklar osv
+ * denna funktionen konrollerar karaktärens rörelser och data ex Grafik på hur karaktären skall se ut i olika vinlklar osv
  * @author johannes
  */
 public class character {
@@ -53,7 +53,8 @@ public class character {
 	/**
 	 * animationen på vilken bild som skall visas
 	 */
-	public float frame=1;
+	public boolean stand=true;
+        public float frame=1;
 	/**
 	 * konstruktorn för character har 3 arg x är start positionen i x led och arg y är startpositionen i y led medans arg r är stroleken på karaktärens ruta
 	 * @param x int
@@ -71,22 +72,15 @@ public class character {
 	 * initialiserar all Grafik på karaktären med hjäl utav en string som innehåller alla path:er till bilderna
 	 * @param img array av strings
 	 */
-	public void setChar(String[] img){
-		int l=img.length;
-		//c = new BufferedImage[img.length];
-		for(int i=0;i<l;i++){
-			//c[i]=new ImageIcon(getClass().getResource(img[i]));
-		}
+	public void setChar(String img){
+            ImageIcon t= new ImageIcon(getClass().getResource(img));
+            c = new BufferedImage(t.getIconWidth(),t.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+            c.getGraphics().drawImage(t.getImage(), 0, 0, null);
 	}
 	public void setChar(String img,int width,int height){
 		ImageIcon t= new ImageIcon(getClass().getResource(img));
-		c = new BufferedImage(t.getIconWidth(),76,BufferedImage.TYPE_INT_ARGB);
-		//for(int i=0;i<4;i++)
-		//	c[i]=new ImageIcon(getClass().getResource(img));
+		c = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		c.getGraphics().drawImage(t.getImage(), 0, 0, null);
-		/*c[1].getImage().getGraphics().clipRect(0, 0, 30, 50);
-		c[2].getImage().getGraphics().clipRect(0, 0, 30, 50);
-		c[3].getImage().getGraphics().clipRect(0, 0, 30, 50);*/
 	}
 	/**
 	 * clear avrundar karaktärens nuvarande position så att det blir ett heltal
@@ -125,34 +119,25 @@ public class character {
 	 * @param res avgör vilken axel du skall flytta karaktären på 
 	 */
 	public void slowMove(int res){
-                System.out.println(this.x*radius+","+(int)this.x2+";"+this.y*radius+","+(int)this.y2);
+                //System.out.println(this.x*radius+","+(int)this.x2+";"+this.y*radius+","+(int)this.y2);
 		if((this.x*radius==(int)this.x2&&this.y*radius==(int)this.y2)){
 			this.clear();
 			this.frame=0;
-			System.out.print("fd");
                         return;
 		}
-                if((this.x2%15)>7.5)
-                    this.x2+=15-this.x2%15;
-                else
-                    this.x2-=this.x2%15;
-                if((this.y2%15)>7.5)
-                    this.y2+=15-this.y2%15;
-                else
-                    this.y2-=this.y2%15;
-		double in=0.1;
+		double in=0.15;
 		if(res==-1)return;
 		else if(res==0){
-			if(this.x*radius>this.x2){
-				this.x2+=incr;
-				this.direciton=2;
-				frame+=in;
-			}
-			else if(this.x*radius<this.x2){
-				this.x2-=incr;
-				this.direciton=1;
-				frame+=in;
-			}
+                    if(this.x*radius>this.x2){
+                        this.x2+=incr;
+                        this.direciton=2;
+                            frame+=in;
+                    }
+                    else if(this.x*radius<this.x2){
+                        this.x2-=incr;
+                        this.direciton=1;
+                            frame+=in;
+                    }
 		}
 		else if(res==1){
 			if(this.y*radius>this.y2){
