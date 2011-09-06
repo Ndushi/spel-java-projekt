@@ -26,7 +26,7 @@ public class Projekt extends Render{
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/redhod.png",30,50);
-		this.world=new World("/res/worlds/testWorld");
+		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/testWorld");
 	}
 	/**
 	 * tick är medlem av Render och anropas varje loopintervall och här kollar vi då om det har tryckts ner någon tangent
