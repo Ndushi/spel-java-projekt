@@ -41,10 +41,11 @@ public class World {
 		if(i==null)throw new RuntimeException("The World is not defined");
 		this.path=i;
 		sound.playSound("opening.mp3");
-		File dir = new File(getClass().getResource(this.path).getPath());
+		File dir = new File(this.path);
+		System.out.println(dir.list());
 		File[] data = dir.listFiles();
 		if (data == null) 
-			throw new RuntimeException("World does not exist!");
+			throw new RuntimeException("World,"+this.path+", does not exist!");
 		for(int im = 0;im < data.length; im++){
 			if(data[im].isFile()){
 				if(data[im].getName().equals("metal_box.jpg")){
