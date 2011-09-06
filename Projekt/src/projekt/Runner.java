@@ -94,6 +94,7 @@ public class Runner extends JFrame implements Runnable {
      *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
      */
     public Runner() {
+	super("Pokémon!!");
 	this.setBackground(Color.BLACK);
 	this.setForeground(Color.BLACK);
 	this.setFont(new Font("Arial", Font.PLAIN, 24));
