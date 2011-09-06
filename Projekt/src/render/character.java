@@ -80,7 +80,7 @@ public class character {
 	}
 	public void setChar(String img,int width,int height){
 		ImageIcon t= new ImageIcon(getClass().getResource(img));
-		c = new BufferedImage(t.getIconWidth(),200,BufferedImage.TYPE_INT_ARGB);
+		c = new BufferedImage(t.getIconWidth(),76,BufferedImage.TYPE_INT_ARGB);
 		//for(int i=0;i<4;i++)
 		//	c[i]=new ImageIcon(getClass().getResource(img));
 		c.getGraphics().drawImage(t.getImage(), 0, 0, null);
@@ -125,12 +125,21 @@ public class character {
 	 * @param res avgör vilken axel du skall flytta karaktären på 
 	 */
 	public void slowMove(int res){
+                System.out.println(this.x*radius+","+(int)this.x2+";"+this.y*radius+","+(int)this.y2);
 		if((this.x*radius==(int)this.x2&&this.y*radius==(int)this.y2)){
 			this.clear();
 			this.frame=0;
 			System.out.print("fd");
                         return;
 		}
+                if((this.x2%15)>7.5)
+                    this.x2+=15-this.x2%15;
+                else
+                    this.x2-=this.x2%15;
+                if((this.y2%15)>7.5)
+                    this.y2+=15-this.y2%15;
+                else
+                    this.y2-=this.y2%15;
 		double in=0.1;
 		if(res==-1)return;
 		else if(res==0){
@@ -141,19 +150,19 @@ public class character {
 			}
 			else if(this.x*radius<this.x2){
 				this.x2-=incr;
-				this.direciton=0;
+				this.direciton=1;
 				frame+=in;
 			}
 		}
 		else if(res==1){
 			if(this.y*radius>this.y2){
 				this.y2+=incr;
-				this.direciton=3;
+				this.direciton=0;
 				frame+=in;
 			}
 			else if(this.y*radius<this.y2){
 				this.y2-=incr;
-				this.direciton=1;
+				this.direciton=3;
 				frame+=in;
 			}
 		}

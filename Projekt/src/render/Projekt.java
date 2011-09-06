@@ -25,7 +25,7 @@ public class Projekt extends Render{
 		String[] s =new String[4];
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
-		focus.setChar("/res/CharMain/redhod.png",30,50);
+		focus.setChar("/res/CharMain/firehero.gif",381,19);
 		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/testWorld");
 	}
 	/**
@@ -91,9 +91,10 @@ public class Projekt extends Render{
 			this.exitCode=1;
 		g.drawImage(world.alpha.getImage(), (int) -this.focus.x2+this.getWidth()/2,  (int) -this.focus.y2 + this.getHeight()/2
 			,world.alpha.getIconWidth()*radius,world.alpha.getIconHeight()*radius, this);
-		BufferedImage t =focus.c.getSubimage(27*focus.direciton, 50*(((int)focus.frame)%4), 27, 50);
+                BufferedImage t = focus.c.getSubimage(16*(((int)focus.frame)%4), 19*focus.direciton, 16, 19);
+		//BufferedImage t =focus.c.getSubimage(27*focus.direciton, 50*(((int)focus.frame)%4), 27, 50);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
 		g.setColor(Color.white);
-		g.drawString("Alphamap, verision: 0.2", 0, 12);
+		g.drawString("Alphamap, version: 0.2", 0, 12);
 	}
 }

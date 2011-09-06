@@ -18,7 +18,7 @@ public class Render extends Canvas {
 	/**
 	 * radius används för att bestämma hur stor den kvadratiska ruta är som karaktären kan stå i
 	 */
-	protected int radius = 20;
+	protected int radius = 15;
 	/**
 	 *  dbg används som en buffert för att förvara föregående renderade bild utav Canvaset
 	 */
