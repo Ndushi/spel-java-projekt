@@ -44,11 +44,14 @@ public class World {
 			throw new RuntimeException("World,"+this.path+", does not exist!");
 		for(int im = 0;im < data.length; im++){
 			if(data[im].isFile()){
-				if(data[im].getName().equals("graphics.jpg")){
+				if(data[im].getName().equals("layout.jpg")){
 					this.layout= new ImageIcon(data[im].getPath());
 				}
 				if(data[im].getName().equals("alpha.png")){
-					this.alpha= new ImageIcon(data[im].getPath());
+					this.alpha = new ImageIcon(data[im].getPath());
+				}
+				if(data[im].getName().equals("graphics.png")){
+					this.grafik = new ImageIcon(data[im].getPath());
 				}
 			}
 		}
@@ -67,7 +70,7 @@ public class World {
 		return  Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ffaaaaaa");
 	}
 	public Color getRGBA(int x,int y){
-		BufferedImage b=new BufferedImage(this.alpha.getIconWidth(),this.alpha.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		BufferedImage b = new BufferedImage(this.alpha.getIconWidth(),this.alpha.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
 		b.getGraphics().drawImage(this.alpha.getImage(), 0, 0, null);
 		int pixelCol = b.getRGB(x, y);
 		return new Color(
@@ -76,5 +79,13 @@ public class World {
 				pixelCol & 0xff,
 				(pixelCol >>> 24) & 0xff
 		);
+	}
+	void paint(Graphics g,int x2,int y2,int width,int height) {
+		
+		g.drawImage(this.alpha.getImage(), -x2+width/2, -y2 + height/2,this.alpha.getIconWidth()*15,this.alpha.getIconHeight()*15, null);
+		g.drawImage(this.layout.getImage(), -x2+width/2, -y2 + height/2, null);
+	}
+	void paintTop(Graphics g,int x2, int y2,int width,int height){
+		g.drawImage(this.grafik.getImage(), -x2+width/2, -y2 + height/2, null);
 	}
 }
