@@ -93,7 +93,6 @@ public class Projekt extends Render{
 	 */
 	@Override
 	public void paint(Graphics g){
-		System.out.println(""+(1>>>2));
 		if((focus.x*focus.radius!=focus.x2))
 			focus.slowMove(0);
 		else if(focus.y*focus.radius!=focus.y2)
@@ -101,14 +100,12 @@ public class Projekt extends Render{
 		if(world.isPoortal((int)this.focus.x2/radius, (int)this.focus.y2/radius))
 			this.exitCode=1;
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-		/*g.drawImage(world.alpha.getImage(), (int) -this.focus.x2+this.getWidth()/2,  (int) -this.focus.y2 + this.getHeight()/2
-			,world.alpha.getIconWidth()*radius,world.alpha.getIconHeight()*radius, this);*/
                 BufferedImage t = focus.c.getSubimage(16*(((int)focus.frame)%4), 20*focus.direciton, 16, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
 		world.paintTop(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 g.setColor(new Color(0x666666));
                 g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
-                drawShadowWithString("Alphamap, version: 0.4", 2, 12, g, Color.white, new Color(0x666666));
+                drawShadowWithString("Version: \u03B1 0.1", 2, 12, g, Color.white, new Color(0x666666));
 	}
         public void drawShadowWithString(String string, int x, int y, Graphics g, Color c1, Color c2){
             g.setColor(c2);
