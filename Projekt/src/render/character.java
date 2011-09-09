@@ -1,6 +1,5 @@
 package render;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 /**
@@ -32,7 +31,7 @@ public class character {
 	/**
 	 * en array av alla items karaktären har plockat upp
 	 */
-	public int[] items;
+	private int[] items;
 	/**
 	 * direction säger åt vilket håll som karaktären är påväg emot
 	 */
@@ -67,6 +66,28 @@ public class character {
 		this.x2=x*r;
 		this.y2=y*r;
 		this.radius=r;
+		this.items=new int[255];
+	}
+	public boolean addItem(int b){
+		int i=0;
+		while(i<255&&this.items[i]!=0)i++;
+		if(i<255&&i==0)
+			this.items[i]=b;
+		else return false;
+		return true;
+	}
+	public boolean deleteItem(int i){
+		if(this.items[i]==0)return false;
+		this.items[i]=0;
+		return true;
+	}
+	public int getItem(int i){
+		return this.items[i];
+	}
+	public int relplaceItem(int i,int b){
+		int cur=this.items[i];
+		this.items[i]=b;
+		return cur;
 	}
 	/**
 	 * initialiserar all Grafik på karaktären med hjäl utav en string som innehåller alla path:er till bilderna

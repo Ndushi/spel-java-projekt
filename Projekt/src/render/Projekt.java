@@ -1,8 +1,11 @@
 package render;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 /**
@@ -44,8 +47,14 @@ public class Projekt extends Render{
 			this.exitCode=1;
 			return;
 		}
-                if (!(left || right || up || down))
+                if (!(left || right || up || down)){
+			//**** Delayen ****//
 			delay++;
+			
+			//**** pickup ****//
+			if(k[KeyEvent.VK_CONTROL])
+			    this.banan();
+		}
 		else
 			delay=0;
 		if(delay>=15)
@@ -85,6 +94,30 @@ public class Projekt extends Render{
 			if((down&&!up)){
 				focus.direciton=0;
 			}
+		}
+	}
+	public void banan() {
+		int direction=this.focus.direciton;
+		int x=0,y=0;
+		if(direction==1||direction==2)
+			x=(int)direction*2-3;
+		else if(direction==3||direction==0)
+			y=(-2*direction)/3+1;
+		Color temp = this.world.getRGBA((int)this.focus.x2/15+x, (int) this.focus.y2/15+y);
+		if(!(temp.equals(new Color(0xff000000))||temp.equals(new Color(0xffffffff)))){
+			Graphics2D ag =this.world.alpha.createGraphics();
+			ag.setColor(Color.white);
+			ag.fillRect((int)this.focus.x2/15+x, (int)this.focus.y2/15+y, 1, 1);
+			
+			ag = this.world.items.createGraphics ();
+			AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f);
+			Composite c = ag.getComposite();
+			ag.setComposite(composite);
+			ag.setColor(new Color(0, 0, 0,0));
+			ag.fillRect(((int)this.focus.x2/15+x)*15, ((int)this.focus.y2/15+y)*15, 15, 15);
+			ag.setComposite(c);
+			int b=temp.getBlue();
+			if(b!=0) this.focus.addItem(b);
 		}
 	}
 	/**
