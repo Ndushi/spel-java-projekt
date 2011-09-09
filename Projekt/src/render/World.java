@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
  * @author johannes
  */
 public class World {
+	int radius=16;
 	/**
 	 * berdden på världens layout bild
 	 */
@@ -64,24 +65,22 @@ public class World {
 					gr.drawImage(temp.getImage(), 0, 0, null);
 				}
 			}
-		}
-		this.items = new BufferedImage(this.alpha.getWidth()*15,this.alpha.getHeight()*15,BufferedImage.TYPE_INT_ARGB);
+		}/*
+		this.items = new BufferedImage(this.alpha.getWidth()*radius,this.alpha.getHeight()*radius,BufferedImage.TYPE_INT_ARGB);
 		Graphics gr = this.items.getGraphics();
 		for(int ix=0;ix<this.alpha.getWidth();ix++){
 			for(int iy=0;iy<this.alpha.getHeight();iy++){
-				/** @TODO fix item image*/
 				if(!(this.alpha.getRGB(ix, iy)==0xff000000||this.alpha.getRGB(ix, iy)==0xffffffff)){
-					System.out.println("Color:"+new Color(this.alpha.getRGB(ix, iy))+":" +((this.alpha.getRGB(ix,iy)>>> 16) & 0xff)+","+((this.alpha.getRGB(ix,iy)>>> 8) & 0xff) );
 					gr.drawImage(
 						this.grafik.getSubimage(
-						   ((this.alpha.getRGB(ix,iy)>>> 16) & 0xff)*15,
-						   ((this.alpha.getRGB(ix,iy)>>> 8) & 0xff )*15,
-						    15, 15),
-						ix*15, iy*15, null
+						   ((this.alpha.getRGB(ix,iy)>>> 16) & 0xff)*radius,
+						   ((this.alpha.getRGB(ix,iy)>>> 8) & 0xff )*radius,
+						    radius, radius),
+						ix*radius, iy*radius, null
 					);
 				}
 			}
-		}
+		}*/
 		this.width=this.alpha.getWidth();
 		this.height=this.alpha.getHeight();
 	}
@@ -91,7 +90,7 @@ public class World {
 	 * @return true om karaktären kan gå till punkten x,y annars returnerar den false
 	 */
 	public boolean canGo(int x, int y) {
-		return Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ffffffff");
+		return !Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ff000000");
 	}
 	public boolean isPoortal(int x,int y){
 		return  Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ffaaaaaa");
@@ -108,7 +107,7 @@ public class World {
 			i++;
 		}
 		if(i>=pixelCol.length-1)
-			return new BufferedImage(15,15,BufferedImage.TYPE_INT_BGR);
+			return new BufferedImage(radius,radius,BufferedImage.TYPE_INT_BGR);
 
 		return b.getSubimage(x, y, w, h);
 	}
@@ -122,21 +121,20 @@ public class World {
 		);
 	}
 	void paint(Graphics g,int x2,int y2,int width,int height) {
-		int radius=15;
-		if(this.getRGBA(x2/15, y2/15).equals(new Color(0xfbc815))){
+		if(this.getRGBA(x2/radius, y2/radius).equals(new Color(0xfbc815))){
 			Graphics ag =this.alpha.createGraphics();
 			//Graphics ag=this.alpha.getImage().getGraphics().create();
 			ag.setColor(Color.white);
-			ag.fillRect(x2/15, y2/15, 1, 1);
+			ag.fillRect(x2/radius, y2/radius, 1, 1);
 			
-			//BufferedImage im=(BufferedImage)this.alpha.getImage().getSource();//.getGraphics().fillRect(x2/15, y2/15, 1, 1);
+			//BufferedImage im=(BufferedImage)this.alpha.getImage().getSource();//.getGraphics().fillRect(x2/radius, y2/radius, 1, 1);
 		}
-		g.drawImage(this.alpha, -x2+width/2, -y2 + height/2,this.alpha.getWidth()*15,this.alpha.getHeight()*15, null);
+		//g.drawImage(this.alpha, -x2+width/2, -y2 + height/2,this.alpha.getWidth()*radius,this.alpha.getHeight()*radius, null);
 		g.drawImage(this.layout.getImage(), -x2+width/2, -y2 + height/2, null);
 		g.drawImage(this.items, -x2+width/2, -y2 + height/2, null);
 		//g.drawImage(this.isSolid(x2, y2, radius, radius), 0, 20, null);
-		//g.setColor(new Color(this.isSolid(x2/15, y2/15, radius, radius)));
-		//g.fillRect( width/2-2*radius, height/2-radius-radius/5+radius,radius,radius);
+		//g.setColor(new Color(this.isSolid(x2/radius, y2/radius, radius, radius)));
+		//g.fillReFlashigare namn på bilder! Dolda ändringar som involverar utvecklingen av items.ct( width/2-2*radius, height/2-radius-radius/5+radius,radius,radius);
 	}
 	void paintTop(Graphics g,int x2, int y2,int width,int height){
 		g.drawImage(this.overlay.getImage(), -x2+width/2, -y2 + height/2, null);

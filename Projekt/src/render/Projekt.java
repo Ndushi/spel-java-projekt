@@ -25,12 +25,12 @@ public class Projekt extends Render{
 	 * konstruktorn för spelet
 	 */
 	public Projekt(){
-		focus=new character(1,1,radius);
+		focus=new character(2,2,radius);
 		String[] s =new String[4];
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/testWorld");
+		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/pokemon");
 	}
 	int delay=0;
 	/**
@@ -130,7 +130,7 @@ public class Projekt extends Render{
 			focus.slowMove(0);
 		else if(focus.y*focus.radius!=focus.y2)
 			focus.slowMove(1);
-		if(world.isPoortal((int)this.focus.x2/radius, (int)this.focus.y2/radius))
+		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1)))
 			this.exitCode=1;
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 BufferedImage t = focus.c.getSubimage(16*(((int)focus.frame)%4), 20*focus.direciton, 16, 20);
