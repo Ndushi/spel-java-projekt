@@ -57,7 +57,7 @@ public class Projekt extends Render{
 		}
 		else
 			delay=0;
-		if(delay>=15)
+		if(delay>=radius)
 			this.focus.frame=0;
 		//X-axeln
 		if(this.focus.y-this.focus.y2/radius==0&&!up&&!down){
@@ -103,18 +103,18 @@ public class Projekt extends Render{
 			x=(int)direction*2-3;
 		else if(direction==3||direction==0)
 			y=(-2*direction)/3+1;
-		Color temp = this.world.getRGBA((int)this.focus.x2/15+x, (int) this.focus.y2/15+y);
+		Color temp = this.world.getRGBA((int)this.focus.x2/radius+x, (int) this.focus.y2/radius+y);
 		if(!(temp.equals(new Color(0xff000000))||temp.equals(new Color(0xffffffff)))){
 			Graphics2D ag =this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
-			ag.fillRect((int)this.focus.x2/15+x, (int)this.focus.y2/15+y, 1, 1);
+			ag.fillRect((int)this.focus.x2/radius+x, (int)this.focus.y2/radius+y, 1, 1);
 			
 			ag = this.world.items.createGraphics ();
 			AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f);
 			Composite c = ag.getComposite();
 			ag.setComposite(composite);
 			ag.setColor(new Color(0, 0, 0,0));
-			ag.fillRect(((int)this.focus.x2/15+x)*15, ((int)this.focus.y2/15+y)*15, 15, 15);
+			ag.fillRect(((int)this.focus.x2/radius+x)*radius, ((int)this.focus.y2/radius+y)*radius, radius, radius);
 			ag.setComposite(c);
 			int b=temp.getBlue();
 			if(b!=0) this.focus.addItem(b);
@@ -133,7 +133,7 @@ public class Projekt extends Render{
 		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1)))
 			this.exitCode=1;
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-                BufferedImage t = focus.c.getSubimage(16*(((int)focus.frame)%4), 20*focus.direciton, 16, 20);
+                BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
 		world.paintTop(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 g.setColor(new Color(0x666666));

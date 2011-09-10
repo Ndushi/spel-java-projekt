@@ -41,46 +41,51 @@ public class World {
 		this.path=i;
 		sound.playSound("opening.mp3");
 		File dir = new File(this.path);
-		System.out.println(dir.list());
 		File[] data = dir.listFiles();
 		if (data == null) 
 			throw new RuntimeException("World,"+this.path+", does not exist!");
+		System.out.println("Loading...");
 		for(int im = 0;im < data.length; im++){
 			if(data[im].isFile()){
 				if(data[im].getName().equals("layout.png")){
+					System.out.println("layout loaded.");
 					this.layout= new ImageIcon(data[im].getPath());
 				}
 				if(data[im].getName().equals("overlay.png")){
+					System.out.println("overlay loaded.");
 					this.overlay = new ImageIcon(data[im].getPath());
 				}
 				if(data[im].getName().equals("graphics.png")){
+					System.out.println("graphics loaded.");
 					ImageIcon temp = new ImageIcon(data[im].getPath());
 					this.grafik = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
 					this.grafik.getGraphics().drawImage(temp.getImage(), 0, 0, null);
 				}
 				if(data[im].getName().equals("alpha.png")){
+					System.out.println("alpha loaded.");
 					ImageIcon temp = new ImageIcon(data[im].getPath());
 					this.alpha = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
 					Graphics gr= this.alpha.getGraphics();
 					gr.drawImage(temp.getImage(), 0, 0, null);
 				}
 			}
-		}/*
+		}
 		this.items = new BufferedImage(this.alpha.getWidth()*radius,this.alpha.getHeight()*radius,BufferedImage.TYPE_INT_ARGB);
 		Graphics gr = this.items.getGraphics();
 		for(int ix=0;ix<this.alpha.getWidth();ix++){
 			for(int iy=0;iy<this.alpha.getHeight();iy++){
-				if(!(this.alpha.getRGB(ix, iy)==0xff000000||this.alpha.getRGB(ix, iy)==0xffffffff)){
+				int ixy = this.alpha.getRGB(ix, iy);
+				if(!(ixy==0xff000000||ixy==0xffffffff||ixy==0xffaaaaaa)){
 					gr.drawImage(
 						this.grafik.getSubimage(
-						   ((this.alpha.getRGB(ix,iy)>>> 16) & 0xff)*radius,
-						   ((this.alpha.getRGB(ix,iy)>>> 8) & 0xff )*radius,
+						   ((ixy>>> 16) & 0xff)*radius,
+						   ((ixy>>> 8) & 0xff )*radius,
 						    radius, radius),
 						ix*radius, iy*radius, null
 					);
 				}
 			}
-		}*/
+		}
 		this.width=this.alpha.getWidth();
 		this.height=this.alpha.getHeight();
 	}
@@ -90,7 +95,8 @@ public class World {
 	 * @return true om karaktären kan gå till punkten x,y annars returnerar den false
 	 */
 	public boolean canGo(int x, int y) {
-		return !Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ff000000");
+		String argb=Integer.toHexString(this.getRGBA(x, y).getRGB());
+		return (!argb.equals("ff000000")&&this.getRGBA(x, y).getBlue()==0xff)||argb.equals("ffaaaaaa");
 	}
 	public boolean isPoortal(int x,int y){
 		return  Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ffaaaaaa");

@@ -53,61 +53,54 @@ public class Screen {
 	 * @return true om inget går fel
 	 */
 	public boolean setFullScreen(JFrame window){
-    	window.setUndecorated(true);
-    	window.setResizable(false);
-    	vc.setFullScreenWindow(window);
-    	if(this.dm!=null && vc.isDisplayChangeSupported()){
-    		try{
-    			vc.setDisplayMode(this.dm);
-    		}catch(Exception e){}
-    	}
-    	return true;
-    }
-    /*public void setFullScreen(JFrame window){
-    	window.setSize(400, 400);
-    	//window.setUndecorated(true);
-    	window.setResizable(false);
-    	window.show(true);
-    }*/
-    /**
-     *återställer fullscreen läget
-     * @param b true om fönstret skall stängas annars gömmas
-     * @return true om inget går fel
-     */
-    public boolean restoreFullScreen(boolean b){
-    	Window w= vc.getFullScreenWindow();
-    	if(w != null&&b) w.dispose();
-    	vc.setFullScreenWindow(null);
-    	return true;
-    }
-    /**
-     *sätter skärmen i normal läget med width och height värdena som gränser
-     * @param window JFrame
-     * @return true om inget går fel
-     */
-    @SuppressWarnings("deprecation")
+		window.setUndecorated(true);
+		window.setResizable(false);
+		vc.setFullScreenWindow(window);
+		if(this.dm!=null && vc.isDisplayChangeSupported()){
+			try{
+				vc.setDisplayMode(this.dm);
+			}catch(Exception e){}
+		}
+		return true;
+	}
+	/**
+	 *återställer fullscreen läget
+	 * @param b true om fönstret skall stängas annars gömmas
+	 * @return true om inget går fel
+	 */
+	public boolean restoreFullScreen(boolean b){
+		Window w= vc.getFullScreenWindow();
+		if(w != null&&b) w.dispose();
+		vc.setFullScreenWindow(null);
+		return true;
+	}
+	/**
+	 *sätter skärmen i normal läget med width och height värdena som gränser
+	 * @param window JFrame
+	 * @return true om inget går fel
+	 */
 	public boolean setScreen(JFrame window){
-    	window.setSize(dim.width, dim.height);
-    	//window.setUndecorated(true);
-    	//window.setResizable(false);
-    	window.show(true);
-    	return true;
-    }
-    /**
-     *återställer normal läget
-     * @param window om fönstret skall stängas eller bara gömmas
-     * @param b om fönstret skall stängas annars gömmas
-     * @return true om inget går fel
-     */
+		window.setSize(dim.width, dim.height);
+        	//window.setUndecorated(true);
+		window.setResizable(false);
+		window.show(true);
+        	return true;
+	}
+	/**
+	 *återställer normal läget
+	 * @param window om fönstret skall stängas eller bara gömmas
+	 * @param b om fönstret skall stängas annars gömmas
+	 * @return true om inget går fel
+	 */
 	public boolean restoreScreen(JFrame window,boolean b){
-    	window.show(false);
-    	if(window != null&&b) window.dispose();
-    	return true;
-    }
-    /**
-     * @return nuvarande fönstret
-     */
-    public Window getFullScreenWindow(){
-    	return vc.getFullScreenWindow();
-    }
+		window.show(false);
+		if(window != null&&b) window.dispose();
+		return true;
+	}
+	/**
+	 * @return nuvarande fönstret
+	 */
+	public Window getFullScreenWindow(){
+		return vc.getFullScreenWindow();
+	}
 }
