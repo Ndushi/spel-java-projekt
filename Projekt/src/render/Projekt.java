@@ -30,7 +30,7 @@ public class Projekt extends Render{
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/pokemon");
+		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/world187");
 	}
 	int delay=0;
 	/**
@@ -121,7 +121,7 @@ public class Projekt extends Render{
 		}
 	}
 	/**
-	 *  Denna funktionen ritar allt i hela spelet inklusive det world genererar som en bild
+	 *  Denna funktionen ritar allt i hela spelet (inklusive det world genererar) som en bild
 	 * @param g Graphics
 	 */
 	@Override
@@ -130,8 +130,10 @@ public class Projekt extends Render{
 			focus.slowMove(0);
 		else if(focus.y*focus.radius!=focus.y2)
 			focus.slowMove(1);
-		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1)))
-			this.exitCode=1;
+		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1))){
+			/** @TODO switch worlds!!! */
+			this.world.setWorldFromColor("/res/worlds");
+		} 
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
@@ -141,12 +143,12 @@ public class Projekt extends Render{
                 drawShadowWithString("Version: \u03B1 0.1", 2, 12, g, Color.white, new Color(0x666666));
 	}
         public void drawShadowWithString(String string, int x, int y, Graphics g, Color c1, Color c2){
-            g.setColor(c2);
-            g.drawString(string, x+1, y);
-            g.drawString(string, x-1, y);
-            g.drawString(string, x, y+1);
-            g.drawString(string, x, y-1);
-            g.setColor(c1);
-            g.drawString(string, x, y);
+		g.setColor(c2);
+		g.drawString(string, x+1, y);
+		g.drawString(string, x-1, y);
+		g.drawString(string, x, y+1);
+		g.drawString(string, x, y-1);
+		g.setColor(c1);
+		g.drawString(string, x, y);
         }
 }

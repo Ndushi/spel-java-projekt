@@ -1,17 +1,19 @@
 package render;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.ImageIcon;
-
 /**
  *  World har koll på all grafik och saker som skall vara utlagda på nuvarande bana denna klassen skall ha subklasser utformade effter vad
  *  man vill ha för värld
  * @author johannes
  */
 public class World {
+	int pos[]=new int[2];
+	String errors="";
 	int radius=16;
 	/**
 	 * berdden på världens layout bild
@@ -45,37 +47,35 @@ public class World {
 		if (data == null) 
 			throw new RuntimeException("World,"+this.path+", does not exist!");
 		System.out.println("Loading...");
-		for(int im = 0;im < data.length; im++){
-			if(data[im].isFile()){
-				if(data[im].getName().equals("layout.png")){
-					System.out.println("layout loaded.");
-					this.layout= new ImageIcon(data[im].getPath());
-				}
-				if(data[im].getName().equals("overlay.png")){
-					System.out.println("overlay loaded.");
-					this.overlay = new ImageIcon(data[im].getPath());
-				}
-				if(data[im].getName().equals("graphics.png")){
-					System.out.println("graphics loaded.");
-					ImageIcon temp = new ImageIcon(data[im].getPath());
-					this.grafik = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
-					this.grafik.getGraphics().drawImage(temp.getImage(), 0, 0, null);
-				}
-				if(data[im].getName().equals("alpha.png")){
-					System.out.println("alpha loaded.");
-					ImageIcon temp = new ImageIcon(data[im].getPath());
-					this.alpha = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
-					Graphics gr= this.alpha.getGraphics();
-					gr.drawImage(temp.getImage(), 0, 0, null);
-				}
-			}
-		}
+		
+		this.loadWorld();
+	}
+	private void loadWorld(){
+		ImageIcon temp=null;
+		Graphics gr=null;
+		System.out.println(this.path+"layout loaded.");
+		this.layout= new ImageIcon(this.path+"/layout.png");
+
+		//System.out.println("overlay loaded.");
+		this.overlay = new ImageIcon(this.path+"/overlay.png");
+
+		//System.out.println("graphics loaded.");
+		temp = new ImageIcon(this.path+"/graphics.png");
+		this.grafik = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		this.grafik.getGraphics().drawImage(temp.getImage(), 0, 0, null);
+
+		System.out.println("alpha loaded.");
+		temp = new ImageIcon(this.path+"/alpha.png");
+		this.alpha = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		gr= this.alpha.getGraphics();
+		gr.drawImage(temp.getImage(), 0, 0, null);
+
 		this.items = new BufferedImage(this.alpha.getWidth()*radius,this.alpha.getHeight()*radius,BufferedImage.TYPE_INT_ARGB);
-		Graphics gr = this.items.getGraphics();
+		gr = this.items.getGraphics();
 		for(int ix=0;ix<this.alpha.getWidth();ix++){
 			for(int iy=0;iy<this.alpha.getHeight();iy++){
 				int ixy = this.alpha.getRGB(ix, iy);
-				if(!(ixy==0xff000000||ixy==0xffffffff||ixy==0xffaaaaaa)){
+				if(!(ixy==0xff000000||ixy==0xffffffff)&&(!this.isEqual(ixy)&&!this.isPoortal(ix, iy))){
 					gr.drawImage(
 						this.grafik.getSubimage(
 						   ((ixy>>> 16) & 0xff)*radius,
@@ -89,17 +89,45 @@ public class World {
 		this.width=this.alpha.getWidth();
 		this.height=this.alpha.getHeight();
 	}
+	public void setWorldFromColor(String path){
+		if(this.pos[0]!=-1&&this.pos[1]!=-1){
+			Color c=this.getRGBA(this.pos[0], this.pos[1]);
+			if(this.isPoortal(this.pos[0],this.pos[1])){
+				this.path=getClass().getResource(path+"/world"+c.getRed()).getPath();
+				ImageIcon t= new ImageIcon(this.path+"/alpha.png");
+				if(t.getIconWidth()>this.pos[0]&&t.getIconHeight()>this.pos[1])
+					this.loadWorld();
+				this.pos[0]=-1;
+				this.pos[1]=-1;
+			}
+		}
+		else {
+			/** @TODO add and thow new ExceptionClass*/
+		}
+	}
+	public void setWorld(String path){
+
+	}
+	public boolean isEqual(int rgb){
+		return (((rgb>>> 16) & 0xff)+((rgb>>> 8) & 0xff)+(rgb & 0xff))/3 ==((rgb >>> 16) & 0xff);
+	}
 	/**
 	 * @param x positionen på x
 	 * @param y positionen på y
 	 * @return true om karaktären kan gå till punkten x,y annars returnerar den false
 	 */
 	public boolean canGo(int x, int y) {
-		String argb=Integer.toHexString(this.getRGBA(x, y).getRGB());
-		return (!argb.equals("ff000000")&&this.getRGBA(x, y).getBlue()==0xff)||argb.equals("ffaaaaaa");
+		int argb=this.getRGBA(x, y).getRGB();
+		return (argb!=0xff000000&&this.getRGBA(x, y).getBlue()==0xff&&this.isEqual(argb))||this.isPoortal(x, y);
 	}
 	public boolean isPoortal(int x,int y){
-		return  Integer.toHexString(this.getRGBA(x, y).getRGB()).equals("ffaaaaaa");
+		boolean t=!(this.getRGBA(x, y).getRGB()==0xffffffff||this.getRGBA(x, y).getRGB()==0xff000000)
+			&&this.isEqual(this.getRGBA(x, y).getRGB());
+		if(t){
+			this.pos[0]=x;
+			this.pos[1]=y;
+		}
+		return t;
 	}
 	private BufferedImage isSolid(int x, int y, int w, int h){
 		BufferedImage b = new BufferedImage(this.layout.getIconWidth(),this.layout.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
@@ -141,6 +169,8 @@ public class World {
 		//g.drawImage(this.isSolid(x2, y2, radius, radius), 0, 20, null);
 		//g.setColor(new Color(this.isSolid(x2/radius, y2/radius, radius, radius)));
 		//g.fillReFlashigare namn på bilder! Dolda ändringar som involverar utvecklingen av items.ct( width/2-2*radius, height/2-radius-radius/5+radius,radius,radius);
+		if(!this.errors.equals(""))
+			g.drawString(errors, 3, 41);
 	}
 	void paintTop(Graphics g,int x2, int y2,int width,int height){
 		g.drawImage(this.overlay.getImage(), -x2+width/2, -y2 + height/2, null);
