@@ -50,7 +50,7 @@ public class Projekt extends Render{
                 if (!(left || right || up || down)){
 			//**** Delayen ****//
 			delay++;
-			
+
 			//**** pickup ****//
 			if(k[KeyEvent.VK_CONTROL])
 			    this.banan();
@@ -108,7 +108,7 @@ public class Projekt extends Render{
 			Graphics2D ag =this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
 			ag.fillRect((int)this.focus.x2/radius+x, (int)this.focus.y2/radius+y, 1, 1);
-			
+
 			ag = this.world.items.createGraphics ();
 			AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f);
 			Composite c = ag.getComposite();
@@ -133,7 +133,9 @@ public class Projekt extends Render{
 		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1))){
 			/** @TODO switch worlds!!! */
 			this.world.setWorldFromColor("/res/worlds");
-		} 
+			if(this.world.canGo(this.focus.y+1, this.focus.x))
+				this.focus.y++;
+		}
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
