@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  *  man vill ha för värld
  * @author johannes
  */
-public class World {
+public class World implements Cloneable {
 	int pos[]=new int[2];
 	String errors="";
 	int radius=16;
@@ -49,6 +49,9 @@ public class World {
 		System.out.println("Loading...");
 		
 		this.loadWorld();
+	}
+	World copy() throws CloneNotSupportedException {
+		return (World)super.clone();
 	}
 	private void loadWorld(){
 		ImageIcon temp=null;

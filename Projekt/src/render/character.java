@@ -1,12 +1,19 @@
 package render;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 /**
  * denna funktionen konrollerar karaktärens rörelser och data ex Grafik på hur karaktären skall se ut i olika vinlklar osv
  * @author johannes
  */
 public class character {
+	/**
+	 * en string som beskriver olika händelser som karaktären gör i spelet
+	 */
+	public String log="";
 	/**
 	 * karaktärens punkt som den skall gå till i x
 	 */
@@ -32,6 +39,8 @@ public class character {
 	 * en array av alla items karaktären har plockat upp
 	 */
 	private int[] items;
+	private ArrayList<World> worlds;
+	private String[] fights;
 	/**
 	 * direction säger åt vilket håll som karaktären är påväg emot
 	 */
@@ -67,6 +76,7 @@ public class character {
 		this.y2=y*r;
 		this.radius=r;
 		this.items=new int[255];
+		this.worlds = new ArrayList();
 	}
 	public boolean addItem(int b){
 		int i=0;
@@ -234,4 +244,25 @@ public class character {
 	 * @param y positionen på y
 	 */
 	public void setY2(float y){this.y2=y;}
+
+	boolean addWorld(World world) {
+		int ex=this.getWorldFromPath(world.path);
+		if(ex==-1){
+			this.worlds.add(world);
+			return true;
+		}
+		this.worlds.set(ex,world);
+		return false;
+	}
+	public World getWorld(int index){
+		return this.worlds.get(index);
+	}
+	public int getWorldFromPath(String p){
+		int length=this.worlds.size();
+		 for(int i=0;i<length;i++){
+			 if(this.worlds.get(i).path.equals(p))
+				 return i;
+		 }
+		 return -1;
+	}
 }

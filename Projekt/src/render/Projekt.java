@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * Projekt är en subklass av Render vilket innebär att det är här all grafik egentligen skrivs ut på skärmen
  * @author johannes
@@ -30,7 +32,7 @@ public class Projekt extends Render{
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/world187");
+		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/world200");
 	}
 	int delay=0;
 	/**
@@ -47,7 +49,7 @@ public class Projekt extends Render{
 			this.exitCode=1;
 			return;
 		}
-                if (!(left || right || up || down)){
+		if (!(left || right || up || down)){
 			//**** Delayen ****//
 			delay++;
 
@@ -132,9 +134,27 @@ public class Projekt extends Render{
 			focus.slowMove(1);
 		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1))){
 			/** @TODO switch worlds!!! */
-			this.world.setWorldFromColor("/res/worlds");
-			if(this.world.canGo(this.focus.y+1, this.focus.x))
-				this.focus.y++;
+			try{
+				try {
+					this.focus.addWorld(this.world.copy());
+				} catch (CloneNotSupportedException ex) {
+					//Logger.getLogger(Projekt.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				String pa=getClass().getResource("/res/worlds"+"/world"+this.world.getRGBA(this.world.pos[0], this.world.pos[1]).getRed()).getPath();
+				if(this.focus.getWorldFromPath(pa)==-1)
+					this.world.setWorldFromColor("/res/worlds");
+				else
+					this.world=this.focus.getWorld(this.focus.getWorldFromPath(pa));
+				if(this.world.canGo(this.focus.y+1, this.focus.x))
+					this.focus.y++;
+				else if(this.world.canGo(this.focus.y-1, this.focus.x))
+					this.focus.y--;
+				else if(this.world.canGo(this.focus.y, this.focus.x-1))
+					this.focus.x--;
+				else if(this.world.canGo(this.focus.y, this.focus.x+1))
+					this.focus.x++;
+			}
+			catch(ArrayIndexOutOfBoundsException b){this.exitCode=1;}
 		}
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
                 BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
