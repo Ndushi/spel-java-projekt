@@ -32,7 +32,7 @@ public class Projekt extends Render{
 		for(int i=0;i<4;i++)
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world=new World("/home/"+System.getProperty("user.name")+"/NetBeansProjects/Projekt/src/res/worlds/world200");
+		this.world=new World(this.getClass().getResource("/res/worlds/world200").getPath());
 	}
 	int delay=0;
 	/**
@@ -49,13 +49,13 @@ public class Projekt extends Render{
 			this.exitCode=1;
 			return;
 		}
+
+                //**** pickup ****//
+                if(k[KeyEvent.VK_CONTROL])
+                    this.banan();
 		if (!(left || right || up || down)){
 			//**** Delayen ****//
 			delay++;
-
-			//**** pickup ****//
-			if(k[KeyEvent.VK_CONTROL])
-			    this.banan();
 		}
 		else
 			delay=0;
@@ -140,7 +140,7 @@ public class Projekt extends Render{
 				} catch (CloneNotSupportedException ex) {
 					//Logger.getLogger(Projekt.class.getName()).log(Level.SEVERE, null, ex);
 				}
-				String pa=getClass().getResource("/res/worlds"+"/world"+this.world.getRGBA(this.world.pos[0], this.world.pos[1]).getRed()).getPath();
+				String pa=getClass().getResource("/res/worlds/world"+this.world.getRGBA(this.world.pos[0], this.world.pos[1]).getRed()).getPath();
 				if(this.focus.getWorldFromPath(pa)==-1)
 					this.world.setWorldFromColor("/res/worlds");
 				else
