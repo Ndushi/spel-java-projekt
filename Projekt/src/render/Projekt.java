@@ -4,12 +4,15 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import projekt.event.Dialogs;
 /**
  * Projekt är en subklass av Render vilket innebär att det är här all grafik egentligen skrivs ut på skärmen
  * @author johannes
@@ -49,6 +52,9 @@ public class Projekt extends Render{
 			this.exitCode=1;
 			return;
 		}
+		//**** pickup ****//
+		if(k[KeyEvent.VK_CONTROL])
+			 this.banan();
 
                 //**** pickup ****//
                 if(k[KeyEvent.VK_CONTROL])
@@ -107,6 +113,7 @@ public class Projekt extends Render{
 			y=(-2*direction)/3+1;
 		Color temp = this.world.getRGBA((int)this.focus.x2/radius+x, (int) this.focus.y2/radius+y);
 		if(!(temp.equals(new Color(0xff000000))||temp.equals(new Color(0xffffffff)))){
+			System.out.println(Dialogs.hello.sayHello);
 			Graphics2D ag =this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
 			ag.fillRect((int)this.focus.x2/radius+x, (int)this.focus.y2/radius+y, 1, 1);
@@ -157,20 +164,38 @@ public class Projekt extends Render{
 			catch(ArrayIndexOutOfBoundsException b){this.exitCode=1;}
 		}
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-                BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
+              BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
 		world.paintTop(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-                g.setColor(new Color(0x666666));
-                g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
-                drawShadowWithString("Version: \u03B1 0.1", 2, 12, g, Color.white, new Color(0x666666));
+              g.setColor(new Color(0x666666));
+              g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
+              this.drawShadowWithString("Version: \u03B1 0.1", 2, 12, Color.white, new Color(0x666666));
+		this.drawDialog("hejjkjlkjlkfjewlkdwjflkdjflksjdflkjdsflkjdslkfjdslkfjdslkfjlkdsjflkdsjfkldsjflkjdskfjkdjflkds");
 	}
-        public void drawShadowWithString(String string, int x, int y, Graphics g, Color c1, Color c2){
-		g.setColor(c2);
-		g.drawString(string, x+1, y);
-		g.drawString(string, x-1, y);
-		g.drawString(string, x, y+1);
-		g.drawString(string, x, y-1);
-		g.setColor(c1);
-		g.drawString(string, x, y);
+	public void drawDialog(String message){
+		int b=5;
+		int m=18;
+		int y=this.getHeight()/4;
+		this.dbg.fillRect(0, y*3, this.getWidth(), y+this.getHeight()%4);
+		this.dbg.setColor(Color.black);
+		this.dbg.drawRect(b, y*3+b, this.getWidth()-2*b, y+this.getHeight()%4-2*b);
+		
+              this.dbg.setFont(new Font(Font.DIALOG,Font.BOLD, 10));
+		String[] lines=message.split("\n");
+		for(int i=0;i<lines.length;i++){
+			FontMetrics fm = this.getFontMetrics(this.dbg.getFont());
+			int width = fm.stringWidth(lines[i]);
+			if(width<this.getWidth()-(2*b))
+				this.drawShadowWithString(lines[i],b+b, 3*y+b+m+i*(12),new Color(0x222222), new Color(0xeeeeee));
+		}
+	}
+        public void drawShadowWithString(String string, int x, int y, Color c1, Color c2){
+		this.dbg.setColor(c2);
+		this.dbg.drawString(string, x+1, y);
+		this.dbg.drawString(string, x-1, y);
+		this.dbg.drawString(string, x, y+1);
+		this.dbg.drawString(string, x, y-1);
+		this.dbg.setColor(c1);
+		this.dbg.drawString(string, x, y);
         }
 }

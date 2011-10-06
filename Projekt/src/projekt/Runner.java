@@ -17,6 +17,9 @@ import render.Screen;
  * @author johannes
  */
 public class Runner extends JFrame implements Runnable {
+	private static final int WIDTH = 400;
+	private static final int HEIGHT = 400;
+	private static final int SCALE = 2;
 
     /**
      * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
@@ -97,20 +100,29 @@ public class Runner extends JFrame implements Runnable {
 	super("Pokémon!!");
 	this.setBackground(Color.BLACK);
 	this.setForeground(Color.BLACK);
+	this.pack();
+	this.setLocationRelativeTo(null);
+	this.setResizable(false);
+	this.setVisible(true);
 	this.setFont(new Font("Arial", Font.PLAIN, 24));
 	this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);
 	this.addKeyListener(game.eHandle);
+	Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+	setSize(size);
+	setPreferredSize(size);
+	setMinimumSize(size);
+	setMaximumSize(size);
 	//Screen setup
 	//Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
 	Dimension d = new Dimension(400, 400);
-	Screen s = new Screen(d.width, d.height);
+	//Screen s = new Screen(d.width, d.height);
 	//game.screen=s;
 	add(game);
 	this.start();
 	try {
-	    if (!(this.fullScreen && s.setFullScreen(this))) {
-		s.setScreen(this);
-	    }
+	    //if (!(this.fullScreen && s.setFullScreen(this))) {
+		//s.setScreen(this);
+	    //}
 	    try {
 		//Thread.sleep(10000);
 		//System.out.print("...exit_complete();\n");
