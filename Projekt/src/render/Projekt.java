@@ -36,6 +36,21 @@ public class Projekt extends Render{
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
 		this.world=new World(this.getClass().getResource("/res/worlds/world200").getPath());
+                focus.setOnWalkCallback(new OnWalkCallback() {
+
+                    public boolean onWalk() {
+                        return true;
+                    }
+
+                    public boolean onStartWalk() {
+                        return false;
+                    }
+
+                    public boolean onEndWalk() {
+                        Projekt.this.focus.freeze=false;
+                        return true;
+                    }
+                });
 	}
 	int delay=0;
 	/**
@@ -44,21 +59,21 @@ public class Projekt extends Render{
 	 */
 	@Override
 	public void tick(boolean[] k){
-		boolean left=k[KeyEvent.VK_A]||k[KeyEvent.VK_LEFT];
-		boolean right=k[KeyEvent.VK_D]||k[KeyEvent.VK_RIGHT];
-		boolean up=k[KeyEvent.VK_W]||k[KeyEvent.VK_UP];
-		boolean down=k[KeyEvent.VK_S]||k[KeyEvent.VK_DOWN];
+		boolean left=(k[KeyEvent.VK_A]||k[KeyEvent.VK_LEFT]) && !focus.freeze;
+		boolean right=(k[KeyEvent.VK_D]||k[KeyEvent.VK_RIGHT]) && !focus.freeze;
+		boolean up=(k[KeyEvent.VK_W]||k[KeyEvent.VK_UP]) && !focus.freeze;
+		boolean down=(k[KeyEvent.VK_S]||k[KeyEvent.VK_DOWN]) && !focus.freeze;
 		if(k[KeyEvent.VK_ESCAPE]||this.exitCode==1){
 			this.exitCode=1;
 			return;
 		}
 		//**** pickup ****//
 		if(k[KeyEvent.VK_CONTROL])
-			 this.banan();
+			 this.pickup();
 
                 //**** pickup ****//
                 if(k[KeyEvent.VK_CONTROL])
-                    this.banan();
+                    this.pickup();
 		if (!(left || right || up || down)){
 			//**** Delayen ****//
 			delay++;
@@ -104,7 +119,7 @@ public class Projekt extends Render{
 			}
 		}
 	}
-	public void banan() {
+	private void pickup() {
 		int direction=this.focus.direciton;
 		int x=0,y=0;
 		if(direction==1||direction==2)
@@ -141,6 +156,7 @@ public class Projekt extends Render{
 			focus.slowMove(1);
 		if(world.isPoortal((int)(this.focus.x2/radius-0.1+1), (int)(this.focus.y2/radius-0.1+1))){
 			/** @TODO switch worlds!!! */
+                        focus.freeze = true;
 			try{
 				try {
 					this.focus.addWorld(this.world.copy());

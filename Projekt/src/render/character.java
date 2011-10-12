@@ -10,6 +10,8 @@ import javax.swing.ImageIcon;
  * @author johannes
  */
 public class character {
+        public OnWalkCallback onWalkCallback=null;
+        public boolean freeze=false;
 	/**
 	 * en string som beskriver olika händelser som karaktären gör i spelet
 	 */
@@ -151,11 +153,13 @@ public class character {
 	 */
 	public void slowMove(int res){
                 //System.out.println(this.x*radius+","+(int)this.x2+";"+this.y*radius+","+(int)this.y2);
-		if((this.x*radius==(int)this.x2&&this.y*radius==(int)this.y2)){
-			this.clear();
-			this.frame=0;
-                        return;
+		if((this.x*radius==((int)this.x2)&&this.y*radius==((int)this.y2)+1)){
+			//this.clear();
+			//this.frame=0;
+                        this.onWalkCallback.onEndWalk();
+                        //return;
 		}
+                this.onWalkCallback.onWalk();
 		double in=0.09;
 		if(res==-1)return;
 		else if(res==0){
@@ -265,4 +269,7 @@ public class character {
 		 }
 		 return -1;
 	}
+        public void setOnWalkCallback(OnWalkCallback callback){
+            this.onWalkCallback=callback;
+        }
 }
