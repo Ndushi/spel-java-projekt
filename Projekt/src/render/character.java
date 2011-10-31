@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
  * @author johannes
  */
 public class character {
+	public boolean freze=false;
         public OnWalkCallback onWalkCallback=null;
         public boolean freeze=false;
 	/**
@@ -64,7 +65,11 @@ public class character {
 	 * animationen på vilken bild som skall visas
 	 */
 	public boolean stand=true;
-        public float frame=1;
+	public float frame=1;
+	/**
+	 * om det pågår en dialog med karacktären
+	 */
+	boolean dialog=false;
 	/**
 	 * konstruktorn för character har 3 arg x är start positionen i x led och arg y är startpositionen i y led medans arg r är stroleken på karaktärens ruta
 	 * @param x int

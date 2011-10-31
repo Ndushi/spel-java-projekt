@@ -18,21 +18,63 @@ import render.Screen;
  */
 public class Runner extends JFrame implements Runnable {
 	private static final int WIDTH = 400;
-	private static final int HEIGHT = 400;
+	private static final int HEIGHT = 200;
 	private static final int SCALE = 2;
 
-    /**
-     * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
-     */
-    protected boolean fullScreen = false;
-    /**
-     * Main game, denna variabel representerar canvasobjektet som visas på skärmen.
-     */
-    Projekt game = new Projekt();
-    /**
-     * runner är den nya tråden som gör det möjligt att loopa spelet i en whileloop utan att stänga ner andra funktioner så som events osv.
-     */
-    protected Thread runner = null; // looping device
+	/**
+	 * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
+	 */
+	protected boolean fullScreen = false;
+	/**
+	 * Main game, denna variabel representerar canvasobjektet som visas på skärmen.
+	 */
+	Projekt game = new Projekt();
+	/**
+	 * runner är den nya tråden som gör det möjligt att loopa spelet i en whileloop utan att stänga ner andra funktioner så som events osv.
+	 */
+	protected Thread runner = null; // looping device
+
+	/**
+	 *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
+	 */
+	public Runner() {
+		super("Pokémon!!");
+		this.setBackground(Color.BLACK);
+		this.setForeground(Color.BLACK);
+		//this.setResizable(false);
+		this.setVisible(true);
+		this.setFont(new Font("Arial", Font.PLAIN, 24));
+		this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);
+		this.addKeyListener(game.eHandle);
+		Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+		setSize(size);
+		setPreferredSize(size);
+		setMinimumSize(size);
+		setMaximumSize(size);
+		//Screen setup
+		//Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocationRelativeTo(null);
+		this.pack();
+		//Screen s = new Screen(d.width, d.height);
+		//game.screen=s;
+		add(game);
+		this.start();
+		try {
+			//if (!(this.fullScreen && s.setFullScreen(this))) {
+			//s.setScreen(this);
+			//}
+			try {
+			//Thread.sleep(10000);
+			//System.out.print("...exit_complete();\n");
+			} catch (Exception e) {
+			}
+		} finally {
+			//game.stop();
+			//if(!(this.fullScreen&&s.restoreFullScreen(false)))
+			//s.restoreScreen(this,false);
+			//this.dispose();
+		}
+	}
 
     /**
      * run() är den funktionen som anropas så fort du skapar ett nytt objekt och då startar den en loop som inte slutar fören spelet pausas eller man stänger ner fönstret
@@ -92,50 +134,6 @@ public class Runner extends JFrame implements Runnable {
 	    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 	}
     }
-
-    /**
-     *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
-     */
-    public Runner() {
-	super("Pokémon!!");
-	this.setBackground(Color.BLACK);
-	this.setForeground(Color.BLACK);
-	this.pack();
-	this.setLocationRelativeTo(null);
-	this.setResizable(false);
-	this.setVisible(true);
-	this.setFont(new Font("Arial", Font.PLAIN, 24));
-	this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);
-	this.addKeyListener(game.eHandle);
-	Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
-	setSize(size);
-	setPreferredSize(size);
-	setMinimumSize(size);
-	setMaximumSize(size);
-	//Screen setup
-	//Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension d = new Dimension(400, 400);
-	//Screen s = new Screen(d.width, d.height);
-	//game.screen=s;
-	add(game);
-	this.start();
-	try {
-	    //if (!(this.fullScreen && s.setFullScreen(this))) {
-		//s.setScreen(this);
-	    //}
-	    try {
-		//Thread.sleep(10000);
-		//System.out.print("...exit_complete();\n");
-	    } catch (Exception e) {
-	    }
-	} finally {
-	    //game.stop();
-	    //if(!(this.fullScreen&&s.restoreFullScreen(false)))
-	    //s.restoreScreen(this,false);
-	    //this.dispose();
-	}
-    }
-
     /**
      *	startar run() loopen
      */

@@ -36,21 +36,22 @@ public class Projekt extends Render{
 			s[i]="/res/CharMain/ts"+i+".png";
 		focus.setChar("/res/CharMain/firehero.gif");
 		this.world=new World(this.getClass().getResource("/res/worlds/world200").getPath());
-                focus.setOnWalkCallback(new OnWalkCallback() {
+		focus.setOnWalkCallback(new OnWalkCallback() {
 
-                    public boolean onWalk() {
-                        return true;
-                    }
+			public boolean onWalk() {
+				return true;
+			}
 
-                    public boolean onStartWalk() {
-                        return false;
-                    }
-
-                    public boolean onEndWalk() {
-                        Projekt.this.focus.freeze=false;
-                        return true;
-                    }
-                });
+			public boolean onStartWalk() {
+				return false;
+			}
+			
+			public boolean onEndWalk() {
+				if(Projekt.this.focus.dialog)
+					Projekt.this.focus.freeze=false;
+				return true;
+			}
+		  });
 	}
 	int delay=0;
 	/**
@@ -129,6 +130,8 @@ public class Projekt extends Render{
 		Color temp = this.world.getRGBA((int)this.focus.x2/radius+x, (int) this.focus.y2/radius+y);
 		if(!(temp.equals(new Color(0xff000000))||temp.equals(new Color(0xffffffff)))){
 			System.out.println(Dialogs.hello.sayHello);
+			this.focus.dialog=true;
+			this.focus.freeze=true;
 			Graphics2D ag =this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
 			ag.fillRect((int)this.focus.x2/radius+x, (int)this.focus.y2/radius+y, 1, 1);
@@ -180,13 +183,15 @@ public class Projekt extends Render{
 			catch(ArrayIndexOutOfBoundsException b){this.exitCode=1;}
 		}
 		world.paint(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-              BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
+		BufferedImage t = focus.c.getSubimage(radius*(((int)focus.frame)%4), 20*focus.direciton, radius, 20);
 		g.drawImage(t,this.getWidth()/2-t.getWidth()/2-radius/2+radius, this.getHeight()/2-t.getHeight()-radius/5+radius, this);
 		world.paintTop(g,(int)this.focus.x2,(int)this.focus.y2,this.getWidth(),this.getHeight());
-              g.setColor(new Color(0x666666));
-              g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
-              this.drawShadowWithString("Version: \u03B1 0.1", 2, 12, Color.white, new Color(0x666666));
-		this.drawDialog("hejjkjlkjlkfjewlkdwjflkdjflksjdflkjdsflkjdslkfjdslkfjdslkfjlkdsjflkdsjfkldsjflkjdskfjkdjflkds");
+		if(this.focus.dialog){
+			g.setColor(new Color(0x666666));
+			g.setFont(new Font("Lucida Typewriter Regular",Font.BOLD, 12));
+			this.drawShadowWithString("Version: \u03B1 0.1", 2, 12, Color.white, new Color(0x666666));
+			this.drawDialog("hejjkjlkjlkfjewlkdwjflkdjflksjdflkjdsflkjdslkfjdslkfjdslkfjlkdsjflkdsjfkldsjflkjdskfjkdjflkds");
+		}
 	}
 	public void drawDialog(String message){
 		int b=5;
