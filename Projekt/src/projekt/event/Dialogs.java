@@ -6,33 +6,29 @@ package projekt.event;
  */
 public final class Dialogs {
 	public static final int MAXMESSAGELENGTH=100;
-	public static final class hello{
+	public static final class Begin{
 		public static final String sayHello="hej";
 	}
-
-	private static class delete {
-
-		public delete() {
+	public static boolean endof=true;
+	public static String []message;
+	public static void initDialog(String mes){
+		//if(Dialogs.message.length >MAXMESSAGELENGTH)
+			// TODO fix spliting of the message
+		if(endof){
+			Dialogs.message=mes.split("\n");
+			Dialogs.endof=false;
 		}
 	}
-	boolean endof=true;
-	String []message;
-	void initDialog(String message){
-		if(message.length() >MAXMESSAGELENGTH)
-			// TODO fix spliting of the message
-		this.message=message.split("");
-		this.endof=false;
-	}
-	String nextMessage(){
+	public static String nextMessage(){
 		String m="";
-		for (int i=0;message[i].equals("");i++){
-			m=message[i];
-			message[i]="";
-			if(i==message.length){
-				endof=true;
-				return "";
+		for (int i=0;Dialogs.message.length>i;i++){
+			if(!Dialogs.message[i].equals("")){
+				m=Dialogs.message[i];
+				Dialogs.message[i]="";
+				return m;
 			}
 		}
-		return m;
+		endof=true;
+		return "";
 	}
 }
