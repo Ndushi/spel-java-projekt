@@ -142,7 +142,7 @@ public class Battle extends JFrame {
 	g.setColor(new Color(0x285068));
 	g.fillRoundRect(12, 261, 236, 106, 5, 5);
 	g.setColor(new Color(0xFFFFFF));
-	new PFont("What will "+me.name+" do?", g, 25, 280);
+	new PFont(",.What will "+me.name+" do?", g, 25, 280);
 	//g.drawString("What will "+name.toUpperCase()+" do?", 25, 280);
 	g.setColor(blk);
 	g.fillRect(200, 250, 200, 150);
