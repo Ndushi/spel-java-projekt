@@ -31,6 +31,12 @@ public class PFont {
 	text = str;
 	ImgString();
     }
+    void SetColor(String str){
+	if (str == "white" || str == "black")
+	    img = new ImageIcon(getClass().getResource("/res/fonts/"+str+".png"));
+	else
+	    System.out.println("\""+str+"\" is not a valid color!");
+    }
     /** @TODO hejsan 
      */
     @Override
