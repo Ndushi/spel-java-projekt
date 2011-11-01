@@ -14,28 +14,31 @@ public class PFont {
     private String text;
     private ImageIcon img= new ImageIcon(getClass().getResource("/res/fonts/white.png"));
     
-    PFont(String str){
+    public PFont(String str){
 	text = str;
 	ImgString();
     }
-    PFont(){}
-    PFont(String str, Graphics g, int x, int y){
+    public PFont(String str, Graphics g, int x, int y){
 	text = str;
 	ImgString();
 	PrintAt(g, x, y);
     }
-    void PrintAt(Graphics g, int x, int y){
+    public PFont PrintAt(Graphics g, int x, int y){
 	g.drawImage(Bimg, x, y, null);
+	return this;
     }
-    void SetString(String str) {
+    public PFont SetString(String str) {
 	text = str;
 	ImgString();
+	return this;
     }
-    void SetColor(String str){
+    public PFont SetColor(String str){
 	if (str == "white" || str == "black")
 	    img = new ImageIcon(getClass().getResource("/res/fonts/"+str+".png"));
 	else
 	    System.out.println("\""+str+"\" is not a valid color!");
+	ImgString();
+	return this;
     }
     /** @TODO hejsan 
      */
