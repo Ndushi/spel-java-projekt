@@ -11,10 +11,10 @@ import java.awt.event.KeyEvent;
  * @author johannes
  */
 public final class Keys {
-	public static final int left = KeyEvent.VK_A;
-	public static final int right = KeyEvent.VK_D;
-	public static final int up = KeyEvent.VK_W;
-	public static final int down = KeyEvent.VK_S;
+	public static final int left = KeyEvent.VK_LEFT;
+	public static final int right = KeyEvent.VK_RIGHT;
+	public static final int up = KeyEvent.VK_UP;
+	public static final int down = KeyEvent.VK_DOWN;
 	public static final int a=KeyEvent.VK_Z;
 	public static final int b=KeyEvent.VK_X;
 	public static final int select=KeyEvent.VK_1;

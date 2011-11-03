@@ -49,26 +49,26 @@ public class Projekt extends Render {
 			}
 
 			public boolean onEndWalk() {
-				if (Projekt.this.focus.dialog) {
+				if (!Projekt.this.focus.action.isEmpty()) {
 					Projekt.this.focus.freeze = false;
-					Projekt.this.focus.dialog = false;
+					Projekt.this.focus.action = "";
 				}
 				return true;
 			}
 		});
 	}
 	int delay = 0;
-
+	private long millidelay;
 	/**
 	 * tick är medlem av Render och anropas varje loopintervall och här kollar vi då om det har tryckts ner någon tangent
 	 * @param k boolean[]
 	 */
 	@Override
 	public void tick(boolean[] k) {
-		boolean left = (k[Keys.left] || k[KeyEvent.VK_LEFT]) && !focus.freeze;
-		boolean right = (k[Keys.right] || k[KeyEvent.VK_RIGHT]) && !focus.freeze;
-		boolean up = (k[Keys.up] || k[KeyEvent.VK_UP]) && !focus.freeze;
-		boolean down = (k[Keys.down] || k[KeyEvent.VK_DOWN]) && !focus.freeze;
+		boolean left = (k[Keys.left] || k[KeyEvent.VK_A]) && !focus.freeze;
+		boolean right = (k[Keys.right] || k[KeyEvent.VK_D]) && !focus.freeze;
+		boolean up = (k[Keys.up] || k[KeyEvent.VK_W]) && !focus.freeze;
+		boolean down = (k[Keys.down] || k[KeyEvent.VK_S]) && !focus.freeze;
 		boolean a=(k[Keys.a]);
 		boolean b=(k[Keys.b]);
 		boolean select=(k[Keys.select]);
@@ -86,17 +86,26 @@ public class Projekt extends Render {
 		if (delay >= radius) {
 			this.focus.frame = 0;
 		}
-		if (k[Keys.a]) {
-			if (!Dialogs.endof)
-				this.drawDialog(Dialogs.nextMessage());
-			else
-				this.focus.onWalkCallback.onEndWalk();
+		//**** pickup ****//
+		if (k[Keys.a]){
+			if(Dialogs.endof&&this.pickup())
+				millidelay = System.currentTimeMillis();
+			else if (millidelay!=0&& System.currentTimeMillis() - millidelay > 100 ) {
+				String t=Dialogs.nextMessage();
+				System.out.println(t);
+				this.drawDialog(t);
+				if(Dialogs.endof){
+					this.focus.onWalkCallback.onEndWalk();
+					//this.pickup();
+				}
+				millidelay = 0;
+			}
+			millidelay = System.currentTimeMillis();
+			
 		}
 		
-		//**** pickup ****//
-		if (k[Keys.b]) {
-			this.pickup();
-		}
+		
+		
 		
 		//X-axeln
 		if (this.focus.y - this.focus.y2 / radius == 0 && !up && !down) {
@@ -136,7 +145,7 @@ public class Projekt extends Render {
 		}
 	}
 
-	private void pickup() {
+	private boolean pickup() {
 		int direction = this.focus.direciton;
 		int x = 0, y = 0;
 		if (direction == 1 || direction == 2) {
@@ -146,7 +155,8 @@ public class Projekt extends Render {
 		}
 		Color temp = this.world.getRGBA((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y);
 		if (!(temp.equals(new Color(0xff000000)) || temp.equals(new Color(0xffffffff)))) {
-			this.focus.dialog = true;
+			this.focus.action ="dialog";
+			Dialogs.initDialog(Dialogs.Begin.sayHello);
 			this.focus.freeze = true;
 			Graphics2D ag = this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
@@ -163,7 +173,9 @@ public class Projekt extends Render {
 			if (b != 0) {
 				this.focus.addItem(b);
 			}
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -179,6 +191,7 @@ public class Projekt extends Render {
 		}
 		if (world.isPoortal((int) (this.focus.x2 / radius - 0.1 + 1), (int) (this.focus.y2 / radius - 0.1 + 1))) {
 			/** @TODO switch worlds!!! */
+			focus.action="world";
 			focus.freeze = true;
 			try {
 				try {
@@ -209,18 +222,19 @@ public class Projekt extends Render {
 		BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
 		g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
 		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
-		if (this.focus.dialog) {
+		
+		//this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
+		new PFont("Alpha - version 0.5",g,2,12);
+		if (this.focus.action.equals("dialog")) {
 			g.setColor(new Color(0x666666));
-			g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
-			this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
-			Dialogs.initDialog(Dialogs.Begin.sayHello);
-			this.drawDialog(Dialogs.message[0]);
+			//g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
+			this.drawDialog(Dialogs.message[Dialogs.getIndex()]);
 		}
 	}
 
 	public void drawDialog(String message) {
 		int b = 5;
-		int m = 18;
+		int m = 8;
 		int y = this.getHeight() / 4;
 		this.dbg.fillRect(0, y * 3, this.getWidth(), y + this.getHeight() % 4);
 		this.dbg.setColor(Color.black);
@@ -231,9 +245,8 @@ public class Projekt extends Render {
 		for (int i = 0; i < lines.length; i++) {
 			FontMetrics fm = this.getFontMetrics(this.dbg.getFont());
 			int width = fm.stringWidth(lines[i]);
-			if (width < this.getWidth() - (2 * b)) {
-				this.drawShadowWithString(lines[i], b + b, 3 * y + b + m + i * (12), new Color(0x222222), new Color(0xeeeeee));
-			}
+			if (width < this.getWidth() - (2 * b)) 
+				new PFont(lines[i],this.dbg,b + b, 3 * y + b +m + i * (12));
 		}
 	}
 

@@ -17,9 +17,9 @@ import render.Screen;
  * @author johannes
  */
 public class Runner extends JFrame implements Runnable {
-	private static final int WIDTH = 400;
-	private static final int HEIGHT = 200;
-	private static final int SCALE = 2;
+	private static final int WIDTH = 405;
+	private static final int HEIGHT = 405;
+	private static final int SCALE = 1;
 
 	/**
 	 * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
@@ -32,16 +32,16 @@ public class Runner extends JFrame implements Runnable {
 	/**
 	 * runner är den nya tråden som gör det möjligt att loopa spelet i en whileloop utan att stänga ner andra funktioner så som events osv.
 	 */
-	protected Thread runner = null; // looping device
+	private Thread runner = null; // looping device
 
 	/**
 	 *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
 	 */
 	public Runner() {
-		super("Pokémon!!");
+		super("Pokeman");
 		this.setBackground(Color.BLACK);
 		this.setForeground(Color.BLACK);
-		//this.setResizable(false);
+		this.setResizable(false);
 		this.setVisible(true);
 		this.setFont(new Font("Arial", Font.PLAIN, 24));
 		this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);

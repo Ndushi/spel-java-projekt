@@ -68,10 +68,10 @@ public class character {
 	/**
 	 * om det pågår en dialog med karacktären
 	 */
-	boolean dialog=false;
 	public int health=100,maxHealth=100;
 	public String name = "RANDOM";
 	public int lvl=1;
+	String action = "";
 	/**
 	 * konstruktorn för character har 3 arg x är start positionen i x led och arg y är startpositionen i y led medans arg r är stroleken på karaktärens ruta
 	 * @param x int
