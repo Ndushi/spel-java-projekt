@@ -31,13 +31,13 @@ public class Projekt extends Render {
 	 * konstruktorn för spelet
 	 */
 	public Projekt() {
-		focus = new character(2, 2, radius);
+		focus = new character(12, 18, radius);
 		String[] s = new String[4];
 		for (int i = 0; i < 4; i++) {
 			s[i] = "/res/CharMain/ts" + i + ".png";
 		}
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world = new World(this.getClass().getResource("/res/worlds/world200").getPath());
+		this.world = new World(this.getClass().getResource("/res/worlds/world1").getPath());
 		focus.setOnWalkCallback(new OnWalkCallback() {
 
 			public boolean onWalk() {
@@ -91,13 +91,9 @@ public class Projekt extends Render {
 			if(Dialogs.endof&&this.pickup())
 				millidelay = System.currentTimeMillis();
 			else if (millidelay!=0&& System.currentTimeMillis() - millidelay > 100 ) {
-				String t=Dialogs.nextMessage();
-				System.out.println(t);
-				this.drawDialog(t);
-				if(Dialogs.endof){
+				this.drawDialog(Dialogs.nextMessage());
+				if(Dialogs.endof)
 					this.focus.onWalkCallback.onEndWalk();
-					//this.pickup();
-				}
 				millidelay = 0;
 			}
 			millidelay = System.currentTimeMillis();
@@ -109,7 +105,7 @@ public class Projekt extends Render {
 		
 		//X-axeln
 		if (this.focus.y - this.focus.y2 / radius == 0 && !up && !down) {
-			if ((left && !right) && (this.focus.x - this.focus.x2 / radius >= 0) && focus.x > 1 && this.world.canGo(this.focus.x - 1, this.focus.y)) {
+			if ((left && !right) && (this.focus.x - this.focus.x2 / radius >= 0) && focus.x >= 1 && this.world.canGo(this.focus.x - 1, this.focus.y)) {
 				focus.x--;
 			}
 			if ((right && !left) && (this.focus.x - this.focus.x2 / radius <= 0) && focus.x2 < world.width * radius - radius && this.world.canGo(this.focus.x + 1, this.focus.y)) {
