@@ -235,6 +235,12 @@ public class character {
 		}
 		this.clear(res);
 	}
+	public void transport(int x,int y){
+		this.x=x;
+		this.x2=x*this.radius;
+		this.y=y;
+		this.y2=y*this.radius;
+	}
 	/**
 	 * @deprecated
 	 * @return

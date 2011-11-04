@@ -7,7 +7,7 @@ package projekt.event;
 public final class Dialogs {
 	public static final int MAXMESSAGELENGTH=100;
 	public static final class Begin{
-		public static final String sayHello="hej\tdå";
+		public static final String sayHello="hej\thej! jag \nheter johannes\n och detta ar ett test pa en lite langre strang, denna text ligger i en statisk klass: Dialogs.Begin.sayHello...\tNytt medelande som ocksa kan vara intressant att lasa :=)";
 	}
 	public static boolean endof=true;
 	public static String []message;

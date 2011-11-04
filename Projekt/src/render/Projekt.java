@@ -31,13 +31,13 @@ public class Projekt extends Render {
 	 * konstruktorn för spelet
 	 */
 	public Projekt() {
-		focus = new character(12, 18, radius);
+		focus = new character(14, 16, radius);
 		String[] s = new String[4];
 		for (int i = 0; i < 4; i++) {
 			s[i] = "/res/CharMain/ts" + i + ".png";
 		}
 		focus.setChar("/res/CharMain/firehero.gif");
-		this.world = new World(this.getClass().getResource("/res/worlds/world1").getPath());
+		this.world = new World(this.getClass().getResource("/res/worlds/world200").getPath());
 		focus.setOnWalkCallback(new OnWalkCallback() {
 
 			public boolean onWalk() {
@@ -150,7 +150,8 @@ public class Projekt extends Render {
 			y = (-2 * direction) / 3 + 1;
 		}
 		Color temp = this.world.getRGBA((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y);
-		if (!(temp.equals(new Color(0xff000000)) || temp.equals(new Color(0xffffffff)))) {
+		if (temp.getRed()==255&&
+			!(temp.equals(new Color(0xff000000)) || temp.equals(new Color(0xffffffff)))) {
 			this.focus.action ="dialog";
 			Dialogs.initDialog(Dialogs.Begin.sayHello);
 			this.focus.freeze = true;
@@ -185,7 +186,9 @@ public class Projekt extends Render {
 		} else if (focus.y * focus.radius != focus.y2) {
 			focus.slowMove(1);
 		}
-		if (world.isPoortal((int) (this.focus.x2 / radius - 0.1 + 1), (int) (this.focus.y2 / radius - 0.1 + 1))) {
+		int frx=this.focus.x;
+		int fry=this.focus.y;
+		if (world.isPoortal((int) (this.focus.x2 / radius - 0.1 + 1), (int) (this.focus.y2 / radius - 0.1 + 1))&&!this.focus.freeze) {
 			/** @TODO switch worlds!!! */
 			focus.action="world";
 			focus.freeze = true;
@@ -195,32 +198,51 @@ public class Projekt extends Render {
 				} catch (CloneNotSupportedException ex) {
 					//Logger.getLogger(Projekt.class.getName()).log(Level.SEVERE, null, ex);
 				}
-				String pa = getClass().getResource("/res/worlds/world" + this.world.getRGBA(this.world.pos[0], this.world.pos[1]).getRed()).getPath();
-				if (this.focus.getWorldFromPath(pa) == -1) {
-					this.world.setWorldFromColor("/res/worlds");
-				} else {
+				String pa="";
+				try{
+					pa = getClass().getResource("/res/worlds/world" +world.pos[2]).getPath();
+				}catch(NullPointerException e){
+					this.exitCode=1;
+					System.out.println("unable to locate the world: /res/worlds/world" +world.pos[2]);
+				}
+				int x=this.world.pos[0];
+				int y=this.world.pos[1];
+				if (this.focus.getWorldFromPath(pa) == -1) 
+					this.world.setWorld(pa,this.focus.x,this.focus.y);
+				else {
+					this.world.pos[0]=-1;
+					this.world.pos[1]=-1;
+					this.world.pos[2]=-1;
 					this.world = this.focus.getWorld(this.focus.getWorldFromPath(pa));
 				}
-				if (this.world.canGo(this.focus.y + 1, this.focus.x)) {
+				this.focus.transport(x,y);
+				if (this.world.canGo(this.focus.x , this.focus.y+ 1)) 
 					this.focus.y++;
-				} else if (this.world.canGo(this.focus.y - 1, this.focus.x)) {
+				else if (this.world.canGo(this.focus.x , this.focus.y- 1)) 
 					this.focus.y--;
-				} else if (this.world.canGo(this.focus.y, this.focus.x - 1)) {
+				else if (this.world.canGo(this.focus.x - 1, this.focus.y )) 
 					this.focus.x--;
-				} else if (this.world.canGo(this.focus.y, this.focus.x + 1)) {
+				else if (this.world.canGo(this.focus.x + 1, this.focus.y )) 
 					this.focus.x++;
-				}
 			} catch (ArrayIndexOutOfBoundsException b) {
-				this.exitCode = 1;
+				ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
+				ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1);
+				this.focus.freeze=false;
 			}
 		}
-		world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+		try{
+			world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+		}		
+		catch(ArrayIndexOutOfBoundsException e){
+			ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
+			ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1);
+		}
 		BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
 		g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
 		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
 		
 		//this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
-		new PFont("Alpha - version 0.5",g,2,12);
+		//new PFont("Alpha - version 0.5",g,2,12);
 		if (this.focus.action.equals("dialog")) {
 			g.setColor(new Color(0x666666));
 			//g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
@@ -238,12 +260,12 @@ public class Projekt extends Render {
 
 		this.dbg.setFont(new Font(Font.DIALOG, Font.BOLD, 10));
 		String[] lines = message.split("\n");
-		for (int i = 0; i < lines.length; i++) {
+		/*for (int i = 0; i < lines.length; i++) {
 			FontMetrics fm = this.getFontMetrics(this.dbg.getFont());
 			int width = fm.stringWidth(lines[i]);
-			if (width < this.getWidth() - (2 * b)) 
-				new PFont(lines[i],this.dbg,b + b, 3 * y + b +m + i * (12));
-		}
+			if (width < this.getWidth() - (2 * b)) */
+		new PFont(message,this.dbg,b + b, 3 * y + b +m );
+		//}
 	}
 
 	public void drawShadowWithString(String string, int x, int y, Color c1, Color c2) {
