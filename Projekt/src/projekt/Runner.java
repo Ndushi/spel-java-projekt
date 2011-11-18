@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.JFrame;
+import projekt.event.Keys;
 import render.Projekt;
 import render.Screen;
 
@@ -21,6 +22,7 @@ public class Runner extends JFrame implements Runnable {
 	private static final int HEIGHT = 405;
 	private static final int SCALE = 1;
 
+	private static final String NAME="POCKEMANS";
 	/**
 	 * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
 	 */
@@ -38,7 +40,7 @@ public class Runner extends JFrame implements Runnable {
 	 *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
 	 */
 	public Runner() {
-		super("Pokeman");
+		super(NAME);
 		this.setBackground(Color.BLACK);
 		this.setForeground(Color.BLACK);
 		this.setResizable(false);
@@ -92,46 +94,58 @@ public class Runner extends JFrame implements Runnable {
 	//requestFocus();
 	boolean b = false;
 	while (runner != null) {
-	    long dt = System.nanoTime();
-	    long PST = dt - startT;
-	    startT = dt;
-	    if (PST < 0) {
-		PST = 0;
-	    }
-	    if (PST > bi) {
-		PST = bi;
-	    }
+		long dt = System.nanoTime();
+		long PST = dt - startT;
+		startT = dt;
+		if (PST < 0) 
+			PST = 0;
+		if (PST > bi) 
+			PST = bi;
 
-	    tickInt += PST / (bi * 10.0);
-	    boolean ticked = false;
-	    while (tickInt > secperTick) {
-		eCheck(game.eHandle.keys);
-		tickInt -= secperTick;
-		if(game.exitCode==1){
-			this.dispose();
-                        this.stop();
-                }
-		ticked = true;
-		tickCount++;
-		if (tickCount % 60 == 0) {
-		    //if(b)
-		    //System.out.println(frame + " fps");
-		    startT += bi;
-		    frame = 0;
-		    tickCount = 0;
+		tickInt += PST / (bi * 10.0);
+		boolean ticked = false;
+		while (tickInt > secperTick) {
+			eCheck(game.eHandle.keys);
+			if(!Keys.status.equals("")){
+				long t=System.currentTimeMillis()%1000;
+				String title=this.getTitle();
+				int speed=10;
+				if(t>=0&&t<=speed&&title.equals(NAME+" - "+Keys.status+"  .")||title.equals(NAME))
+					this.setTitle(NAME+" - "+Keys.status+".  ");
+				else if(t>=0&&t<=speed){
+					if(title.equals(NAME+" - "+Keys.status+".  "))
+						this.setTitle(NAME+" - "+Keys.status+" . ");
+					else if(title.equals(NAME+" - "+Keys.status+" . "))
+						this.setTitle(NAME+" - "+Keys.status+"  .");
+				}
+			}
+			else
+				this.setTitle(NAME);
+			tickInt -= secperTick;
+			if(game.exitCode==1){
+				System.out.println("\n");
+				this.dispose();
+				this.stop();
+			}
+			ticked = true;
+			tickCount++;
+			if (tickCount % 60 == 0) {
+				//System.out.println(frame + " fps");
+				startT += bi;
+				frame = 0;
+				tickCount = 0;
+			}
 		}
-	    }
-	    if (ticked) {
-		game.render();
-		frame++;
-	    } else {
-		try {
-		    Thread.sleep(1);
-		} catch (InterruptedException e) {
-		    e.printStackTrace();
-		}
-	    }
-	    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+		if (ticked) {
+			game.render();
+			frame++;
+		} 
+		else //kanske lite onödig
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+			}
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 	}
     }
     /**

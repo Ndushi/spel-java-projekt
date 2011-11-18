@@ -19,4 +19,6 @@ public final class Keys {
 	public static final int b=KeyEvent.VK_X;
 	public static final int select=KeyEvent.VK_1;
 	public static final int esc=KeyEvent.VK_ESCAPE;
+	
+	public static String status="";
 }

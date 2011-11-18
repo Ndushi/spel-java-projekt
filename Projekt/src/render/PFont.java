@@ -46,18 +46,24 @@ public class PFont {
 	return text;
     }
     private BufferedImage ImgString(){
-	String []rows=text.split("\n");
-	Bimg = new BufferedImage(7*text.length(), 13*rows.length, BufferedImage.TYPE_INT_ARGB);
-	for (int i=0,r=0,ii=0; i<text.length(); i++){
-	    if(text.charAt(i) =='\n'){
-		r++;
-		ii=i+r;
-		continue;
-	    }
-	    BufferedImage bi = new BufferedImage(7,13,BufferedImage.TYPE_INT_ARGB);
-	    bi.createGraphics().drawImage(img.getImage(),-(text.codePointAt(i)-33)*7,0,null);
-	    Bimg.createGraphics().drawImage(bi,(i-ii)*7,r*13,null);
+	try{
+		String []rows=text.split("\n");
+		Bimg = new BufferedImage(7*text.length(), 13*rows.length, BufferedImage.TYPE_INT_ARGB);
+		for (int i=0,r=0,ii=0; i<text.length(); i++){
+			if(text.charAt(i) =='\n'){
+			r++;
+			ii=i+r;
+			continue;
+			}
+			BufferedImage bi = new BufferedImage(7,13,BufferedImage.TYPE_INT_ARGB);
+			bi.createGraphics().drawImage(img.getImage(),-(text.codePointAt(i)-33)*7,0,null);
+			Bimg.createGraphics().drawImage(bi,(i-ii)*7,r*13,null);
+		}
+		return Bimg;
 	}
-	return Bimg;
+	catch(java.lang.IllegalArgumentException e){
+		Bimg = new BufferedImage(7, 13, BufferedImage.TYPE_INT_ARGB);
+		return Bimg;
+	}
     }
 }

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.ImageIcon;
+import projekt.event.Keys;
 /**
  *  World har koll på all grafik och saker som skall vara utlagda på nuvarande bana denna klassen skall ha subklasser utformade effter vad
  *  man vill ha för värld
@@ -53,6 +54,7 @@ public class World implements Cloneable {
 	private void loadWorld(){
 		ImageIcon temp=null;
 		Graphics gr=null;
+		Keys.status="Loading world";
 		System.out.println(this.path+"layout loaded.");
 		this.layout= new ImageIcon(this.path+"/layout.png");
 
@@ -90,6 +92,7 @@ public class World implements Cloneable {
 		}
 		this.width=this.alpha.getWidth();
 		this.height=this.alpha.getHeight();
+		Keys.status="";
 	}
 	public void setWorldFromColor(String path,int curx,int cury){
 		if(this.pos[0]!=-1&&this.pos[1]!=-1){

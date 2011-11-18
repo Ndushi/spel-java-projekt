@@ -88,12 +88,14 @@ public class Projekt extends Render {
 		}
 		//**** pickup ****//
 		if (k[Keys.a]){
-			if(Dialogs.endof&&this.pickup())
+			if(Dialogs.endof&&this.pickup(false))
 				millidelay = System.currentTimeMillis();
 			else if (millidelay!=0&& System.currentTimeMillis() - millidelay > 100 ) {
 				this.drawDialog(Dialogs.nextMessage());
-				if(Dialogs.endof)
+				if(Dialogs.endof){
 					this.focus.onWalkCallback.onEndWalk();
+					this.pickup(true);
+				}
 				millidelay = 0;
 			}
 			millidelay = System.currentTimeMillis();
@@ -141,7 +143,7 @@ public class Projekt extends Render {
 		}
 	}
 
-	private boolean pickup() {
+	private boolean pickup(boolean pickNow) {
 		int direction = this.focus.direciton;
 		int x = 0, y = 0;
 		if (direction == 1 || direction == 2) {
@@ -152,9 +154,13 @@ public class Projekt extends Render {
 		Color temp = this.world.getRGBA((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y);
 		if (temp.getRed()==255&&
 			!(temp.equals(new Color(0xff000000)) || temp.equals(new Color(0xffffffff)))) {
-			this.focus.action ="dialog";
-			Dialogs.initDialog(Dialogs.Begin.sayHello);
-			this.focus.freeze = true;
+			if(Dialogs.endof&&!pickNow){
+				this.focus.action ="dialog";
+				Dialogs.initDialog(Dialogs.Begin.sayHello);
+				this.focus.freeze = true;
+			}
+			if(!pickNow)
+				return true;
 			Graphics2D ag = this.world.alpha.createGraphics();
 			ag.setColor(Color.white);
 			ag.fillRect((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y, 1, 1);

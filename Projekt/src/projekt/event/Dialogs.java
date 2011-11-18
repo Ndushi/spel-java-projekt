@@ -15,6 +15,8 @@ public final class Dialogs {
 		//if(Dialogs.message.length >MAXMESSAGELENGTH)
 			// TODO fix splitting of the message
 		if(endof){
+			System.out.println("\nDialog:");
+			Keys.status="Dialog";
 			Dialogs.message=mes.split("\t");
 			Dialogs.endof=false;
 		}
@@ -25,16 +27,24 @@ public final class Dialogs {
 	}
 	public static String nextMessage(){
 		String m="";
-		if (ordning < Dialogs.message.length){
+		if (Dialogs.message!=null&&ordning < Dialogs.message.length){
 			Dialogs.ordning++;
 			int cur=Dialogs.ordning-1;
-			if(Dialogs.ordning==Dialogs.message.length){
+			System.out.println(Dialogs.message[cur]);
+			if(Dialogs.ordning>=Dialogs.message.length){
 				Dialogs.endof=true;
 				Dialogs.ordning=0;
+				Dialogs.message=null;
+				if(Keys.status.equals("Dialog"))
+					Keys.status="";
+				return "";
 			}
 			return Dialogs.message[cur];
 		}
+		Dialogs.message=null;
 		Dialogs.endof=true;
+		if(Keys.status.equals("Dialog"))
+			Keys.status="";
 		Dialogs.ordning=0;
 		return "";
 	}
