@@ -213,9 +213,11 @@ public class Projekt extends Render {
 				}
 				int x=this.world.pos[0];
 				int y=this.world.pos[1];
-				if (this.focus.getWorldFromPath(pa) == -1) 
+				if (this.focus.getWorldFromPath(pa) == -1) {
 					this.world.setWorld(pa,this.focus.x,this.focus.y);
+				}
 				else {
+					
 					this.world.pos[0]=-1;
 					this.world.pos[1]=-1;
 					this.world.pos[2]=-1;

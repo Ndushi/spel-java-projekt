@@ -2,6 +2,7 @@ package render;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.ImageIcon;
@@ -35,6 +36,7 @@ public class World implements Cloneable {
 	BufferedImage grafik;
 	BufferedImage alpha;
 	BufferedImage items;
+	private int id=0;
 	/**
 	 * kostruktorn försöker öppna forldern med alla biler och bestämma dess width och height
 	 */
@@ -100,6 +102,7 @@ public class World implements Cloneable {
 			if(this.isPoortal(curx,cury)){ // RGB = Värld, x,y
 				this.path=getClass().getResource(path+"/world"+c.getRed()).getPath();
 				ImageIcon t= new ImageIcon(this.path+"/alpha.png");
+				this.id=this.pos[2];
 				if(t.getIconWidth()>this.pos[0]+radius&&t.getIconHeight()>this.pos[1]+radius)
 					this.loadWorld();
 				this.pos[0]=-1;
@@ -117,6 +120,7 @@ public class World implements Cloneable {
 			if(this.isPoortal(curx,cury)){ // RGB = Värld, x,y
 				this.path=path;
 				ImageIcon t= new ImageIcon(this.path+"/alpha.png");
+				this.id=this.pos[2];
 				if(t.getIconWidth()>=this.pos[0]&&t.getIconHeight()>=this.pos[1])
 					this.loadWorld();
 				this.pos[0]=-1;
@@ -177,6 +181,24 @@ public class World implements Cloneable {
 				(pixelCol >>> 24) & 0xff
 		);
 	}
+	
+	ImageIcon bg=new ImageIcon(getClass().getResource("/res/treerothen.png").getPath());
+	BufferedImage bm=null;
+	void drawBackground(Graphics g,int offx,int offy,int lx,int ly){
+		if(bm==null||(this.id==1)){
+			if(this.id==1)
+				bg= new ImageIcon(getClass().getResource("/res/tree.png").getPath());
+			bm=new BufferedImage(lx,ly,BufferedImage.TYPE_INT_ARGB);
+			int he=bg.getIconHeight();
+			int wi=bg.getIconWidth();
+			for(int i=0;i*he<ly*2;i++)
+				for(int j=0;j*wi<lx;j++)
+					bm.getGraphics().drawImage(bg.getImage(), j*wi-35, i*he/2-35, null);
+			this.id=0;
+		}
+		g.drawImage(bm, offx-32, offy-32, null);
+	}
+	
 	void paint(Graphics g,int x2,int y2,int width,int height) throws ArrayIndexOutOfBoundsException {
 		if(this.getRGBA(x2/radius, y2/radius).equals(new Color(0xfbc815))){
 			Graphics ag =this.alpha.createGraphics();
@@ -186,6 +208,7 @@ public class World implements Cloneable {
 
 			//BufferedImage im=(BufferedImage)this.alpha.getImage().getSource();//.getGraphics().fillRect(x2/radius, y2/radius, 1, 1);
 		}
+		drawBackground(g, -x2+9, -y2-9,width*2,height*2);
 		//g.drawImage(this.alpha, -x2+width/2, -y2 + height/2,this.alpha.getWidth()*radius,this.alpha.getHeight()*radius, null);
 		g.drawImage(this.layout.getImage(), -x2+width/2, -y2 + height/2, null);
 		g.drawImage(this.items, -x2+width/2, -y2 + height/2, null);

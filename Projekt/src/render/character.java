@@ -2,8 +2,6 @@ package render;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 /**
  * denna funktionen konrollerar karaktärens rörelser och data ex Grafik på hur karaktären skall se ut i olika vinlklar osv
@@ -240,6 +238,18 @@ public class character {
 		this.x2=x*this.radius;
 		this.y=y;
 		this.y2=y*this.radius;
+	}
+	public boolean onPosition(int x,int y){
+		return (this.x==x&&this.y==y);
+	}
+	public boolean teleport(int xstart,int ystart,int xstop,int ystop){
+		if(this.x==xstart&&this.y==ystart){
+			this.x=xstop;
+			this.y=ystop;
+			this.staticMove(0);
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * @deprecated
