@@ -22,11 +22,11 @@ public class Render extends Canvas {
 	/**
 	 *  dbg används som en buffert för att förvara föregående renderade bild utav Canvaset
 	 */
-	protected Graphics dbg;
+	public Graphics dbg;
 	/**
 	 * dbImage lagrar dbg
 	 */
-	protected Image dbImage;
+	public Image dbImage;
 	/**
 	 * eHandle används för tangentnedtryckningar
 	 */
@@ -54,7 +54,7 @@ public class Render extends Canvas {
 	 * en funktion som finns inbyggt i Canvas klassen som anropas när man anropar repaint() g är här den nuvarande målade arean
 	 * @param g Graphics
 	 */
-    @Override
+	@Override
 	public void update(Graphics g) {
 		if (dbImage == null || dbImage.getWidth(this) != this.getSize().width) {
 			dbImage = createImage(this.getSize().width, this.getSize().height);
@@ -67,6 +67,12 @@ public class Render extends Canvas {
 		paint(dbg);
 		g.drawImage(dbImage, 0, 0, this);
 	}
+	
+	public void setting(int WIDTH, int HEIGHT) {
+		dbImage = createImage(WIDTH, HEIGHT);
+		dbg = dbImage.getGraphics();
+	}
+	
 	/**
 	 *  Definieras i en annan subklass om vad som skall målas på detta canvas objekt
 	 * @param g Graphics

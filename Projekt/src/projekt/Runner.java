@@ -48,6 +48,7 @@ public class Runner extends JFrame implements Runnable {
 		this.setFont(new Font("Arial", Font.PLAIN, 24));
 		this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);
 		this.addKeyListener(game.eHandle);
+		
 		Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
 		setSize(size);
 		setPreferredSize(size);

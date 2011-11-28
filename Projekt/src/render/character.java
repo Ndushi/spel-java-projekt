@@ -52,7 +52,7 @@ public class character {
 	/**
 	 * avgör hur snabb karaktären förflyttarsig mellan ruta till ruta
 	 */
-	private double incr=1;
+	public double incr=1;
 	/**
 	 * blir 1 eller 2 om det händer någonting med förflyttningen av gubben
 	 * @deprecated 

@@ -33,7 +33,7 @@ public class PFont {
 	return this;
     }
     public PFont SetColor(String str){
-	if (str == "white" || str == "black")
+	if ( str == "white" || str == "black" || str == "red" )
 	    img = new ImageIcon(getClass().getResource("/res/fonts/"+str+".png"));
 	else
 	    System.out.println("\""+str+"\" is not a valid color!");

@@ -5,14 +5,14 @@
 package projekt;
 
 import java.awt.Component;
-import java.net.URL;
+
 
 /**
  *
  * @author johannes
  */
-class MediaPanel extends Component {
-	MediaPanel(URL mediaURL){
+public class LivePlay extends Component{
+	LivePlay(){
 		
 	}
 }

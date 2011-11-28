@@ -14,6 +14,8 @@ import java.awt.event.MouseMotionListener;
  */
 public class EventHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener  {
 	public boolean[] keys = new boolean[65536];
+	public boolean release=true;
+	public int previus;
 	public EventHandler(){
 	}
 	
@@ -52,6 +54,8 @@ public class EventHandler implements KeyListener, FocusListener, MouseListener, 
 		if (k>0 && k<keys.length) {
 			keys[k] = true;
 		}
+		release=false;
+		previus=e.getKeyCode();
 		//proj.tick(keys);
 	}
 
@@ -60,6 +64,7 @@ public class EventHandler implements KeyListener, FocusListener, MouseListener, 
 		if (k>0 && k<keys.length) {
 			keys[k] = false;
 		}
+		release=true;
 		//proj.tick(keys);
 	}
 

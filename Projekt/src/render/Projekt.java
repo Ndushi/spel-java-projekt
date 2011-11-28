@@ -151,7 +151,14 @@ public class Projekt extends Render {
 		} else if (direction == 3 || direction == 0) {
 			y = (-2 * direction) / 3 + 1;
 		}
-		Color temp = this.world.getRGBA((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y);
+		Color temp;
+		try{
+			temp = this.world.getRGBA((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y);
+		}
+		catch(java.lang.ArrayIndexOutOfBoundsException e){
+			// plockar upp något utanför banans kanter
+			return false;
+		}
 		if (temp.getRed()==255&&
 			!(temp.equals(new Color(0xff000000)) || temp.equals(new Color(0xffffffff)))) {
 			if(Dialogs.endof&&!pickNow){

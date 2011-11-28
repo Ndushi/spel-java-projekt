@@ -186,7 +186,7 @@ public class World implements Cloneable {
 	BufferedImage bm=null;
 	void drawBackground(Graphics g,int offx,int offy,int lx,int ly){
 		if(bm==null||(this.id==1)){
-			if(this.id==1)
+			if(this.id==1)	// om världens röda färg är värdet 1
 				bg= new ImageIcon(getClass().getResource("/res/tree.png").getPath());
 			bm=new BufferedImage(lx,ly,BufferedImage.TYPE_INT_ARGB);
 			int he=bg.getIconHeight();
