@@ -31,6 +31,9 @@ public class World implements Cloneable {
 	 *path är en string till foldern där alla bilder och grafik är förvarade för nuvarande värld
 	 */
 	String path;
+        
+        public character npcs[];
+        
 	/**
 	 * vis består av all Grafik i denna världen
 	 */
@@ -41,7 +44,7 @@ public class World implements Cloneable {
 	BufferedImage items;
 	private int id=0;
 	/**
-	 * kostruktorn försöker öppna forldern med alla biler och bestämma dess width och height
+	 * konstruktorn försöker öppna forldern med alla biler och bestämma dess width och height
 	 */
 	World(String i) {
 		if(i==null)throw new RuntimeException("The World is not defined");
@@ -84,13 +87,13 @@ public class World implements Cloneable {
 			for(int iy=0;iy<this.alpha.getHeight();iy++){
 				int ixy = this.alpha.getRGB(ix, iy);
 				if(((ixy >>> 16) & 0xff)==255&&!(ixy==0xff000000||ixy==0xffffffff)&&
-						((ixy>>> 8) & 0xff)*radius+radius<this.grafik.getWidth()&& (ixy & 0xff )*radius+radius<this.grafik.getHeight()){
+						((ixy>>> 8) & 0xff)*20+20<this.grafik.getWidth()&& (ixy & 0xff )*radius+radius<this.grafik.getHeight()){
 					gr.drawImage(
 						this.grafik.getSubimage(
 						   ((ixy>>> 8) & 0xff)*radius,
-						   (ixy & 0xff )*radius,
-						    radius, radius),
-						ix*radius, iy*radius, null
+						   (ixy & 0xff )*20,
+						    radius, 20),
+						ix*radius, iy*radius-8, null
 					);
 				}
 			}
@@ -108,6 +111,10 @@ public class World implements Cloneable {
 				this.id=this.pos[2];
 				if(t.getIconWidth()>this.pos[0]+radius&&t.getIconHeight()>this.pos[1]+radius)
 					this.loadWorld();
+                                /** @TODO if (Color.RED = 255) new Item(x,y,Color.GREEN,Color.BLUE);
+                                 * also:
+                                 * if (Color.BLUE = 255) new character(x,y,Color.RED,Color.GREEN);
+                                 */
 				this.pos[0]=-1;
 				this.pos[1]=-1;
 				this.pos[2]=-1;
@@ -231,6 +238,10 @@ public class World implements Cloneable {
 		new House(10,0),
 		new House(20,0)
 	};
+        /** @TODO Dela item-bilden i overlay och underlay, karaktärerna FÖRSVINNER!!!
+         * 
+         * 
+         */
 	void paintTop(Graphics g,double x2, double y2,int width,int height){
 		g.drawImage(this.overlay.getImage(), (int)-x2+width/2, (int)-y2 + height/2, null);
 	}

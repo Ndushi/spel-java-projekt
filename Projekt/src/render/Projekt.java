@@ -30,13 +30,13 @@ public class Projekt extends Render {
 	 * konstruktorn för spelet
 	 */
 	public Projekt() {
-		focus = new character(14, 16, radius);
+		focus = new character(15, 17, radius);
 		String[] s = new String[4];
 		for (int i = 0; i < 4; i++) {
 			s[i] = "/res/CharMain/ts" + i + ".png";
 		}
-		focus.setChar("/res/CharMain/firehero.gif");
-		this.world = new World(this.getClass().getResource("/res/worlds/world200").getPath());
+		focus.setChar("/res/CharMain/firehero.png");
+		this.world = new World(this.getClass().getResource("/res/worlds/world1").getPath());
 		focus.setOnWalkCallback(new OnWalkCallback() {
 
 			public boolean onWalk() {
@@ -178,7 +178,7 @@ public class Projekt extends Render {
 			Composite c = ag.getComposite();
 			ag.setComposite(composite);
 			ag.setColor(new Color(0, 0, 0, 0));
-			ag.fillRect(((int) this.focus.x2 / radius + x) * radius, ((int) this.focus.y2 / radius + y) * radius, radius, radius);
+			ag.fillRect(((int) this.focus.x2 + x * radius), ((int) this.focus.y2 + y * radius)-8, radius, 20);
 			ag.setComposite(c);
 			int b = temp.getBlue();
 			if (b != 0) {
@@ -206,12 +206,13 @@ public class Projekt extends Render {
             int fry=this.focus.y;
             checkWarp();
             try{
-                    world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+                world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
             }
             catch(ArrayIndexOutOfBoundsException e){
                     ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
                     ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1); 
             }
+            
             BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
             g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
             

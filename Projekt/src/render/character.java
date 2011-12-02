@@ -63,7 +63,7 @@ public class character {
 	 * animationen på vilken bild som skall visas
 	 */
 	public boolean stand=true;
-	public float frame=1;
+	public float frame=0;
         public int health=100,maxHealth=100;
 	public String name = "RANDOM";
 	public int lvl=1;
@@ -111,15 +111,17 @@ public class character {
 	 * initialiserar all Grafik på karaktären med hjäl utav en string som innehåller alla path:er till bilderna
 	 * @param img array av strings
 	 */
-	public void setChar(String img){
+	public character setChar(String img){
             ImageIcon t= new ImageIcon(getClass().getResource(img));
             c = new BufferedImage(t.getIconWidth(),t.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
             c.getGraphics().drawImage(t.getImage(), 0, 0, null);
+            return this;
 	}
-	public void setChar(String img,int width,int height){
+	public character setChar(String img,int width,int height){
 		ImageIcon t= new ImageIcon(getClass().getResource(img));
 		c =  new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		c.getGraphics().drawImage(t.getImage(), 0, 0, null);
+                return this;
 	}
 	public void setRunningPose(String img){
 		ImageIcon t= new ImageIcon(getClass().getResource(img));
