@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 
 import projekt.event.EventHandler;
 import projekt.event.Keys;
+
 /**
  *
  * @author Johan Lindskogen
@@ -20,12 +21,12 @@ import projekt.event.Keys;
 public class Battle extends JFrame {
 
     public static void main(String[] args) {
-	new Battle(new character(0, 0, 16), new character(0, 0, 16));
+	new Battle(new Player(0, 0), new Player(0, 0));
     }
     
     private EventHandler eh = new EventHandler();
     
-    Battle(character c1, character c2) {
+    Battle(Player c1, Player c2) {
 	super("POKÉMANS");
 	me = c1;
 	you = c2;
@@ -45,7 +46,7 @@ public class Battle extends JFrame {
     Image dbImage;
     Graphics dbg;
     int menupos = 0;
-    character me,you;
+    Player me,you;
     
     private void Update(Graphics g) {
 	if(eh.keys[Keys.up]){

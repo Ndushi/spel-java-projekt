@@ -9,8 +9,8 @@ public final class ErrorHandler {
 		static void CharacterOutOfBoundary(){
 			System.out.println("\nFocus out of bounds!");
 		}
-		static void resetCharacterPositionAt(character c,int posX, int posY){
-			System.out.println("We now reset the character's position");
+		static void resetCharacterPositionAt(Player c,int posX, int posY){
+			System.out.println("We now reset the Character's position");
 			c.transport(posY, posY);
 		}
 	}

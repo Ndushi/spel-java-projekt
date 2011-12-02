@@ -32,7 +32,7 @@ public class World implements Cloneable {
 	 */
 	String path;
         
-        public character npcs[];
+        public Character npcs[];
         
 	/**
 	 * vis består av all Grafik i denna världen
@@ -102,6 +102,23 @@ public class World implements Cloneable {
 		this.height=this.alpha.getHeight();
 		Keys.status="";
 	}
+        public int[] RGBtoCMYK(int rgb){
+            int ans[]=new int[4];
+            int rgbs[]=new int[]{
+                ((rgb >>> 16) & 0xff)/255,((rgb >>> 8) & 0xff)/255,(rgb & 0xff)/255
+            };
+            if(rgbs[0]==0&&rgbs[1]==0&&rgbs[2]==0){
+                ans[0]=ans[1]=ans[2]=0;
+                ans[3]=1;
+            }
+            else{
+                int w=Math.max(rgbs[0],Math.max(rgbs[1],rgbs[2]));
+                for(int i=0;i<3;i++)
+                    ans[i]=(w-(rgbs[i]))/w;
+                ans[3]=1-w;
+            }
+            return ans;
+        }
 	public void setWorldFromColor(String path,int curx,int cury){
 		if(this.pos[0]!=-1&&this.pos[1]!=-1){
 			Color c=this.getRGBA(this.pos[0], this.pos[1]);
@@ -113,7 +130,7 @@ public class World implements Cloneable {
 					this.loadWorld();
                                 /** @TODO if (Color.RED = 255) new Item(x,y,Color.GREEN,Color.BLUE);
                                  * also:
-                                 * if (Color.BLUE = 255) new character(x,y,Color.RED,Color.GREEN);
+                                 * if (Color.BLUE = 255) new Character(x,y,Color.RED,Color.GREEN);
                                  */
 				this.pos[0]=-1;
 				this.pos[1]=-1;

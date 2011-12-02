@@ -24,13 +24,13 @@ public class Projekt extends Render {
 	/**
 	 * focus innehåller information om var karaktären befinner sig och hur världen skall relatera sig till var karaktären är(görs ex med att sätta world.setOffset(int x,int y)
 	 */
-	public character focus;
+	public Player focus;
 
 	/**
 	 * konstruktorn för spelet
 	 */
 	public Projekt() {
-		focus = new character(15, 17, radius);
+		focus = new Player(15, 17);
 		String[] s = new String[4];
 		for (int i = 0; i < 4; i++) {
 			s[i] = "/res/CharMain/ts" + i + ".png";
@@ -75,7 +75,7 @@ public class Projekt extends Render {
 			this.exitCode = 1;
 			return;
 		}
-		if(b) focus.incr=1.5;
+		if(b) focus.incr=2;
 		else focus.incr=1;
 		
 		if (!(left || right || up || down)) {
