@@ -4,7 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -17,7 +16,7 @@ import projekt.event.Keys;
  * @author johannes
  */
 public class Projekt extends Render {
-
+        public boolean loadWorld=false;
 	/**
 	 * världens nuvarande egenskaper sparas och ändras i denna variabel.
 	 */
@@ -194,75 +193,36 @@ public class Projekt extends Render {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		if ((focus.x * focus.radius != focus.x2)) {
-			focus.slowMove(0);
-		} else if (focus.y * focus.radius != focus.y2) {
-			focus.slowMove(1);
-		}
-		int frx=this.focus.x;
-		int fry=this.focus.y;
-		if (world.isPoortal((int) (this.focus.x2 / radius - 0.1 + 1), (int) (this.focus.y2 / radius - 0.1 + 1))&&!this.focus.freeze) {
-			/** @TODO switch worlds!!! */
-			focus.action="world";
-			focus.freeze = true;
-			try {
-				try {
-					this.focus.addWorld(this.world.copy());
-				} catch (CloneNotSupportedException ex) {
-					//Logger.getLogger(Projekt.class.getName()).log(Level.SEVERE, null, ex);
-				}
-				String pa="";
-				try{
-					pa = getClass().getResource("/res/worlds/world" +world.pos[2]).getPath();
-				}catch(NullPointerException e){
-					this.exitCode=1;
-					System.out.println("unable to locate the world: /res/worlds/world" +world.pos[2]);
-				}
-				int x=this.world.pos[0];
-				int y=this.world.pos[1];
-				if (this.focus.getWorldFromPath(pa) == -1) {
-					this.world.setWorld(pa,this.focus.x,this.focus.y);
-				}
-				else {
-					
-					this.world.pos[0]=-1;
-					this.world.pos[1]=-1;
-					this.world.pos[2]=-1;
-					this.world = this.focus.getWorld(this.focus.getWorldFromPath(pa));
-				}
-				this.focus.transport(x,y);
-				if (this.world.canGo(this.focus.x , this.focus.y+ 1)) 
-					this.focus.y++;
-				else if (this.world.canGo(this.focus.x , this.focus.y- 1)) 
-					this.focus.y--;
-				else if (this.world.canGo(this.focus.x - 1, this.focus.y )) 
-					this.focus.x--;
-				else if (this.world.canGo(this.focus.x + 1, this.focus.y )) 
-					this.focus.x++;
-			} catch (ArrayIndexOutOfBoundsException b) {
-				ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
-				ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1);
-				this.focus.freeze=false;
-			}
-		}
-		try{
-			world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
-		}		
-		catch(ArrayIndexOutOfBoundsException e){
-			ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
-			ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1);
-		}
-		BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
-		g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
-		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
-		
-		//this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
-		//new PFont("Alpha - version 0.5",g,2,12);
-		if (this.focus.action.equals("dialog")) {
-			g.setColor(new Color(0x666666));
-			//g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
-			this.drawDialog(Dialogs.message[Dialogs.getIndex()]);
-		}
+            if (tr == null)
+                tr = new Transition("slideUpDown");
+            if ((focus.x * focus.radius != focus.x2)) {
+                    focus.slowMove(0);
+            } else if (focus.y * focus.radius != focus.y2) {
+                    focus.slowMove(1);
+            }
+            int frx=this.focus.x;
+            int fry=this.focus.y;
+            checkWarp();
+            try{
+                    world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+            }
+            catch(ArrayIndexOutOfBoundsException e){
+                    ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
+                    ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1); 
+            }
+            BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
+            g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
+            world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+            //this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
+            //new PFont("Alpha - version 0.5",g,2,12);
+            if (this.focus.action.equals("dialog")) {
+                    g.setColor(new Color(0x666666));
+                    //g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
+                    this.drawDialog(Dialogs.message[Dialogs.getIndex()]);
+            }
+            if(tr.index>0)
+                tr.transition(g);
+            focus.freeze=tr.index!=0;//tr.index>0;
 	}
 
 	public void drawDialog(String message) {
@@ -292,4 +252,57 @@ public class Projekt extends Render {
 		this.dbg.setColor(c1);
 		this.dbg.drawString(string, x, y);
 	}
+        public void checkWarp(){
+                int frx=this.focus.x;
+		int fry=this.focus.y;
+                boolean fading=false;
+		if (world.isPoortal((int) (this.focus.x2 / radius - 0.1 + 1), (int) (this.focus.y2 / radius - 0.1 + 1))&&!this.focus.freeze) {
+                        loadWorld=true;
+			focus.action="world";
+			focus.freeze = true;
+                        tr.transition(dbg);
+                }
+                if (loadWorld && tr.dirBool){
+                        loadWorld = false;
+			try {
+				try {
+					this.focus.addWorld(this.world.copy());
+				} catch (CloneNotSupportedException ex) {
+					//Logger.getLogger(Projekt.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				String pa="";
+				try{
+					pa = getClass().getResource("/res/worlds/world" +world.pos[2]).getPath();
+				}catch(NullPointerException e){
+					this.exitCode=1;
+					System.out.println("unable to locate the world: /res/worlds/world" +world.pos[2]);
+				}
+				int x=this.world.pos[0];
+				int y=this.world.pos[1];
+				if (this.focus.getWorldFromPath(pa) == -1) {
+					this.world.setWorld(pa,this.focus.x,this.focus.y);
+				}
+				else {
+					
+					this.world.pos[0]=-1;
+					this.world.pos[1]=-1;
+					this.world.pos[2]=-1;
+					this.world = this.focus.getWorld(this.focus.getWorldFromPath(pa));
+				}
+				this.focus.transport(x,y);
+				if (this.world.canGo(this.focus.x , this.focus.y+ 1)) 
+					this.focus.y++;
+				else if (this.world.canGo(this.focus.x , this.focus.y- 1))
+					this.focus.y--;
+				else if (this.world.canGo(this.focus.x - 1, this.focus.y ))
+					this.focus.x--;
+				else if (this.world.canGo(this.focus.x + 1, this.focus.y ))
+					this.focus.x++;
+			} catch (ArrayIndexOutOfBoundsException b) {
+				ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
+				ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx-1,fry+1);
+				this.focus.freeze=false;
+			}
+                }
+        }
 }

@@ -50,22 +50,26 @@ public class Render extends Canvas {
 	public void render() {
 		repaint();
 	}
+        Transition tr = null;
 	/**
 	 * en funktion som finns inbyggt i Canvas klassen som anropas när man anropar repaint() g är här den nuvarande målade arean
 	 * @param g Graphics
 	 */
 	@Override
 	public void update(Graphics g) {
-		if (dbImage == null || dbImage.getWidth(this) != this.getSize().width) {
-			dbImage = createImage(this.getSize().width, this.getSize().height);
-			dbg = dbImage.getGraphics();
-		}
-		dbg.setColor(getBackground());
-		dbg.fillRect(0, 0, this.getSize().width, this.getSize().height);
+            if (tr==null)
+                tr = new Transition("fadeInOut");
+            if (dbImage == null || dbImage.getWidth(this) != this.getSize().width) {
+                    dbImage = createImage(this.getSize().width, this.getSize().height);
+                    dbg = dbImage.getGraphics();
+            }
+            dbg.setColor(getBackground());
+            dbg.fillRect(0, 0, this.getSize().width, this.getSize().height);
 
-		dbg.setColor(getForeground());
-		paint(dbg);
-		g.drawImage(dbImage, 0, 0, this);
+            dbg.setColor(getForeground());
+            paint(dbg);
+            g.drawImage(dbImage, 0, 0, this);
+            int i=0;
 	}
 	
 	public void setting(int WIDTH, int HEIGHT) {

@@ -63,12 +63,12 @@ public class character {
 	 */
 	public boolean stand=true;
 	public float frame=1;
-	/**
-	 * om det pågår en dialog med karacktären
-	 */
-	public int health=100,maxHealth=100;
+        public int health=100,maxHealth=100;
 	public String name = "RANDOM";
 	public int lvl=1;
+	/**
+	 * om det pågår en dialog med karaktären
+	 */
 	String action = "";
 	/**
 	 * konstruktorn för character har 3 arg x är start positionen i x led och arg y är startpositionen i y led medans arg r är stroleken på karaktärens ruta
