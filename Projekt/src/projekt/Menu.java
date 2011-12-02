@@ -1,8 +1,12 @@
 package projekt;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import projekt.event.*;
 import render.PFont;
@@ -43,7 +47,8 @@ public final class Menu extends JFrame {
 	Runner game=null;
 	 
 	boolean fullscreenError=false;
-	Menu() {
+	Menu() throws IOException {
+		super("Pokemans - Menu");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		
@@ -74,7 +79,7 @@ public final class Menu extends JFrame {
 			paint(dbg);
 			g.drawImage(dbImage, 0, 0, null);
 			if(game!=null&&game.game.exitCode==1)
-				exit=1;
+				setVisible(true);
 		}
 		this.dispose();
 	}
@@ -193,17 +198,21 @@ public final class Menu extends JFrame {
 	public void paint(Graphics g) {
 		g.setColor(new Color(0xFFFDD0));
 		//g.fillRoundRect(2, 2, 400, 400, 25, 25);
-
+		PFont pf = new PFont("The adventures of Dud");
+		g.setColor(new Color(100,100,0,100));
+		g.fillRect(215-4, 110-4, 165+8, 40+8);
+		g.setColor(new Color(0xCCFF90));
+		g.fillRect(215, 110, 165, 40);
 		g.drawImage(img.getImage(), 0, 0, WIDTH,
 				(int) (img.getIconHeight() * ((double) WIDTH / (double) img.getIconWidth())), null);
+		pf.SetColor("green").PrintAt(g, 225, 120);
 		int x = 30, y = 200;
-		PFont pf = new PFont("").SetColor("black").PrintAt(g, x, y);
 		if(lvl==0){
 			g.setColor(new Color(100,100,0,100));
 			g.fillRect(x-25-4, y-20-4, 110+8, 120+8);
 			g.setColor(new Color(0xFFFDD0));
 			g.fillRect(x-25, y-20, 110, 120);
-			pf.SetString("START").PrintAt(g, x, y);
+			pf.SetString("START").SetColor("black").PrintAt(g, x, y);
 			pf.SetString("TUTORIAL").PrintAt(g, x, y + 20);
 			pf.SetString("OPTIONS").PrintAt(g, x, y + 40);
 			pf.SetString("QUIT").PrintAt(g, x, y + 60);
@@ -268,6 +277,9 @@ public final class Menu extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new Menu();
+		try {
+			new Menu();
+		} catch (IOException ex) {
+		}
 	}
 }

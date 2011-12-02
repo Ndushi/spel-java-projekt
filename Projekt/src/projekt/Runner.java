@@ -22,7 +22,7 @@ public class Runner extends JFrame implements Runnable {
 	private static final int HEIGHT = 405;
 	private static final int SCALE = 1;
 
-	private static final String NAME="POCKEMANS";
+	private static final String NAME="POKEMANS";
 	/**
 	 * avgör om skärmen skall visas i fullskärm eller i specifika dimmensioner.
 	 */

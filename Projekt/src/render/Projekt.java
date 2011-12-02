@@ -75,6 +75,8 @@ public class Projekt extends Render {
 			this.exitCode = 1;
 			return;
 		}
+		if(b) focus.incr=1.5;
+		else focus.incr=1;
 		
 		if (!(left || right || up || down)) {
 			//**** Delayen ****//
@@ -86,7 +88,7 @@ public class Projekt extends Render {
 			this.focus.frame = 0;
 		}
 		//**** pickup ****//
-		if (k[Keys.a]){
+		if (a){
 			if(Dialogs.endof&&this.pickup(false))
 				millidelay = System.currentTimeMillis();
 			else if (millidelay!=0&& System.currentTimeMillis() - millidelay > 100 ) {
@@ -212,7 +214,8 @@ public class Projekt extends Render {
             }
             BufferedImage t = focus.c.getSubimage(radius * (((int) focus.frame) % 4), 20 * focus.direciton, radius, 20);
             g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
-            world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+            
+	   world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
             //this.drawShadowWithString("Version: \u03B1 0.2", 2, 12, Color.white, new Color(0x666666));
             //new PFont("Alpha - version 0.5",g,2,12);
             if (this.focus.action.equals("dialog")) {

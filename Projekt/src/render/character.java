@@ -49,6 +49,7 @@ public class character {
 	 * c innehåller alla bilder på karaktären
 	 */
 	public BufferedImage c;
+	public BufferedImage cr;
 	/**
 	 * avgör hur snabb karaktären förflyttarsig mellan ruta till ruta
 	 */
@@ -117,15 +118,20 @@ public class character {
 	}
 	public void setChar(String img,int width,int height){
 		ImageIcon t= new ImageIcon(getClass().getResource(img));
-		c = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+		c =  new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 		c.getGraphics().drawImage(t.getImage(), 0, 0, null);
+	}
+	public void setRunningPose(String img){
+		ImageIcon t= new ImageIcon(getClass().getResource(img));
+		cr =  new BufferedImage(t.getIconWidth(),t.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		cr.getGraphics().drawImage(t.getImage(), 0, 0, null);
 	}
 	/**
 	 * clear avrundar karaktärens nuvarande position så att det blir ett heltal
 	 */
 	public void clear(){
-		this.x2=(int)(this.x2);
-		this.y2=(int)(this.y2);
+		this.x2=(int)(this.x2+0.5);
+		this.y2=(int)(this.y2+0.5);
 	}
 	/**
 	 * avrundar s till närmsta heltal
@@ -158,9 +164,11 @@ public class character {
 	 */
 	public void slowMove(int res){
                 //System.out.println(this.x*radius+","+(int)this.x2+";"+this.y*radius+","+(int)this.y2);
-		if((this.x*radius==((int)this.x2)&&this.y*radius==((int)this.y2)+1)){
+		if((this.x*radius==((int)this.x2 +1)||this.y*radius==((int)this.y2)+1)){
 			//this.clear();
 			//this.frame=0;
+			x2=x*radius;
+			y2=y*radius;
                         this.onWalkCallback.onEndWalk();
                         //return;
 		}

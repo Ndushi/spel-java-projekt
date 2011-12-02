@@ -33,7 +33,7 @@ public class PFont {
 	return this;
     }
     public PFont SetColor(String str){
-	if ( str == "white" || str == "black" || str == "red" )
+	if ( str == "white" || str == "black" || str == "red" || str == "green" )
 	    img = new ImageIcon(getClass().getResource("/res/fonts/"+str+".png"));
 	else
 	    System.out.println("\""+str+"\" is not a valid color!");
@@ -66,4 +66,8 @@ public class PFont {
 		return Bimg;
 	}
     }
+
+	public int getStringLength() {
+		return 7*text.length();
+	}
 }

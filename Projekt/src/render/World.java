@@ -2,10 +2,13 @@ package render;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.ImageIcon;
+import primitives.House;
 import projekt.event.Keys;
 /**
  *  World har koll på all grafik och saker som skall vara utlagda på nuvarande bana denna klassen skall ha subklasser utformade effter vad
@@ -210,15 +213,48 @@ public class World implements Cloneable {
 		}
 		drawBackground(g, -x2+9, -y2-9,width*2,height*2);
 		//g.drawImage(this.alpha, -x2+width/2, -y2 + height/2,this.alpha.getWidth()*radius,this.alpha.getHeight()*radius, null);
-		g.drawImage(this.layout.getImage(), -x2+width/2, -y2 + height/2, null);
+		g.drawImage(this.layout.getImage(), -x2+width/2, -y2 + height/2, null);//0,0,width,height,null);//
 		g.drawImage(this.items, -x2+width/2, -y2 + height/2, null);
 		//g.drawImage(this.isSolid(x2, y2, radius, radius), 0, 20, null);
 		//g.setColor(new Color(this.isSolid(x2/radius, y2/radius, radius, radius)));
 		//g.fillReFlashigare namn på bilder! Dolda ändringar som involverar utvecklingen av items.ct( width/2-2*radius, height/2-radius-radius/5+radius,radius,radius);
 		if(!this.errors.equals(""))
 			g.drawString(errors, 3, 41);
+		if(this.path.contains("test"))
+			for(int i=0;i<h.length;i++)
+				h[i].paint3D(g,x2,y2,width,height,radius);
 	}
-	void paintTop(Graphics g,int x2, int y2,int width,int height){
-		g.drawImage(this.overlay.getImage(), -x2+width/2, -y2 + height/2, null);
+	House h[]=new House[]{
+		new House(0,0),
+		new House(0,10),
+		new House(10,10),
+		new House(10,0),
+		new House(20,0)
+	};
+	void paintTop(Graphics g,double x2, double y2,int width,int height){
+		g.drawImage(this.overlay.getImage(), (int)-x2+width/2, (int)-y2 + height/2, null);
+	}
+	
+	void paint3D(Graphics g,int x2, int y2,int width,int height){
+		Graphics2D g2=((Graphics2D)g);
+		AffineTransform t=g2.getTransform();
+		int w=100,d=200,h=50;
+		int x=-x2+width/2,y=-y2 + height/2;
+		
+		g.drawRect(x,y, w, h);
+		
+		g2.translate(x,y);
+		g2.scale(-((double)x2-w/2)/(double)width, 1);
+		g2.shear(0, 0.5);
+		g.drawRect(0,0, d, h);
+		g2.setTransform(t);
+		
+		g.drawRect((int)(x-(d*((double)x2-w/2))/(double)width), y+d/2, w, h);
+		
+		g2.translate(x+w, y);
+		g2.scale(-((double)x2-w/2)/(double)width, 1);
+		g2.shear(0, 0.5);
+		g.drawRect(0,0, d, h);
+		g2.setTransform(t);
 	}
 }
