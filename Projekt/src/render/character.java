@@ -180,24 +180,24 @@ public class character {
 		else if(res==0){
                     if(this.x*radius>this.x2){
                         this.x2+=incr;
-                        this.direciton=2;
+                        //this.direciton=2;
                             frame+=in;
                     }
                     else if(this.x*radius<this.x2){
                         this.x2-=incr;
-                        this.direciton=1;
+                        //this.direciton=1;
                             frame+=in;
                     }
 		}
 		else if(res==1){
 			if(this.y*radius>this.y2){
 				this.y2+=incr;
-				this.direciton=0;
+				//this.direciton=0;
 				frame+=in;
 			}
 			else if(this.y*radius<this.y2){
 				this.y2-=incr;
-				this.direciton=3;
+				//this.direciton=3;
 				frame+=in;
 			}
 		}
@@ -219,6 +219,7 @@ public class character {
 				//this.direciton=1;
 			}
 		}
+		if((int)frame >= 3)frame=3;
 	}
 	/**
 	 * sätter positionen av karaktären utan smothness

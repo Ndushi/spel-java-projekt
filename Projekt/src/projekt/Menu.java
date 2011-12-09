@@ -78,8 +78,10 @@ public final class Menu extends JFrame {
 			proj.update(dbg);
 			paint(dbg);
 			g.drawImage(dbImage, 0, 0, null);
-			if(game!=null&&game.game.exitCode==1)
+			if(game!=null&&game.game.exitCode==1){
+				game=null;
 				setVisible(true);
+			}
 		}
 		this.dispose();
 	}
