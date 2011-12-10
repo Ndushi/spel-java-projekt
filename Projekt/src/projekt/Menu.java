@@ -1,12 +1,8 @@
 package projekt;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import projekt.event.*;
 import render.PFont;
@@ -16,7 +12,7 @@ import render.Projekt;
  *
  * @author Klaph
  */
-public final class Menu extends JFrame {
+public class Menu extends JFrame {
 	//Play
 	//Namn
 	//SPELA
@@ -47,8 +43,9 @@ public final class Menu extends JFrame {
 	Runner game=null;
 	 
 	boolean fullscreenError=false;
-	Menu() throws IOException {
-		super("Pokemans - Menu");
+	Menu() {
+		//super("Pokemans - Menu");
+		//this.setTitle("Pokemans - Menu");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		
@@ -60,7 +57,6 @@ public final class Menu extends JFrame {
 		img = new ImageIcon(getClass().getResource("/res/pokemans.png").getPath());
 		
 		add(proj);
-		setVisible(true);
 		Dimension size = new Dimension(WIDTH , HEIGHT );
 		setSize(size);
 		setPreferredSize(size);
@@ -68,22 +64,8 @@ public final class Menu extends JFrame {
 		setMaximumSize(size);
 		setLocationRelativeTo(null);
 		pack();
-		
 		dbImage = createImage(this.getSize().width, this.getSize().height);
 		dbg = dbImage.getGraphics();
-		Graphics g=proj.getGraphics();
-		while(exit!=1){
-			event();
-			proj.tick(proj.eHandle.keys);
-			proj.update(dbg);
-			paint(dbg);
-			g.drawImage(dbImage, 0, 0, null);
-			if(game!=null&&game.game.exitCode==1){
-				game=null;
-				setVisible(true);
-			}
-		}
-		this.dispose();
 	}
 	
 	public void event(){
@@ -279,9 +261,20 @@ public final class Menu extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		try {
-			new Menu();
-		} catch (IOException ex) {
+		Menu m=new Menu();
+		m.setVisible(true);
+		Graphics g=m.proj.getGraphics();
+		while(m.exit!=1){
+			m.event();
+			m.proj.tick(m.proj.eHandle.keys);
+			m.proj.update(m.dbg);
+			m.paint(m.dbg);
+			g.drawImage(m.dbImage, 0, 0, null);
+			if(m.game!=null&&m.game.game.exitCode==1){
+				m.game=null;
+				m.setVisible(true);
+			}
 		}
+		m.dispose();
 	}
 }

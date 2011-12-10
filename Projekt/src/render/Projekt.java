@@ -217,7 +217,7 @@ public class Projekt extends Render {
 		checkWarp();
 		try {
 			world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (ArrayIndexOutOfBoundsException e) { // positionen är utanför kartan
 			ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
 			ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx - 1, fry + 1);
 		}
@@ -226,7 +226,7 @@ public class Projekt extends Render {
 			BufferedImage t = focus.c.getSubimage(radius * (int) (focus.incr > 1.0 && focus.frame != 0 ? (focus.frame + 4)  : focus.frame  ), 20 * focus.direciton, radius, 20);
 			g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
 		}
-		catch( java.awt.image.RasterFormatException e){
+		catch( java.awt.image.RasterFormatException e){//om bilden clips utanför bredden, höjden eller är negativ 
 		}
 		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
 		//drawShadowWithString("Version: \u03B1 0.5", 2, 12, Color.white, new Color(0x666666));
@@ -307,14 +307,33 @@ public class Projekt extends Render {
 					this.world = this.focus.getWorld(this.focus.getWorldFromPath(pa));
 				}
 				this.focus.transport(x, y);
-				if (this.world.canGo(this.focus.x, this.focus.y + 1)) {
-					this.focus.y++;
-				} else if (this.world.canGo(this.focus.x, this.focus.y - 1)) {
-					this.focus.y--;
-				} else if (this.world.canGo(this.focus.x - 1, this.focus.y)) {
-					this.focus.x--;
-				} else if (this.world.canGo(this.focus.x + 1, this.focus.y)) {
-					this.focus.x++;
+				if(this.world.isPoortal(x, y)){
+					try{
+						if (this.world.canGo(this.focus.x, this.focus.y + 1)&&!this.world.isPoortal(this.focus.x, this.focus.y + 1)) 
+							this.focus.y++;
+						else 
+							throw new Error(""+(this.focus.y+1));
+					}
+					catch(Throwable t1){
+						try{
+							if (this.world.canGo(this.focus.x, this.focus.y - 1)&&!this.world.isPoortal(this.focus.x, this.focus.y - 1)) 
+								this.focus.y--;
+							else 
+								throw new Error(""+(this.focus.y-1));
+						}catch (Throwable t2){
+							try{
+								if (this.world.canGo(this.focus.x - 1, this.focus.y)&&!this.world.isPoortal(this.focus.x - 1, this.focus.y)) 
+									this.focus.x--;
+								else throw new Error(""+(this.focus.y-1));
+							}
+							catch(Throwable t3){
+								if (this.world.canGo(this.focus.x + 1, this.focus.y)&&!this.world.isPoortal(this.focus.x + 1, this.focus.y )) 
+									this.focus.x++;
+								else
+									throw new ArrayIndexOutOfBoundsException();
+							}
+						}
+					}
 				}
 			} catch (ArrayIndexOutOfBoundsException b) {
 				ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();

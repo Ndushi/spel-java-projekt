@@ -40,7 +40,8 @@ public class Runner extends JFrame implements Runnable {
 	 *	Konstruktorn sätter standardvärderna så som bakgrundsfärg, eventlisteners och Canvaskomponenten
 	 */
 	public Runner() {
-		super(NAME);
+		//super(NAME);
+		//this.setTitle(NAME);
 		this.setBackground(Color.BLACK);
 		this.setForeground(Color.BLACK);
 		this.setResizable(false);
@@ -49,20 +50,14 @@ public class Runner extends JFrame implements Runnable {
 		this.setDefaultCloseOperation(Runner.EXIT_ON_CLOSE);
 		this.addKeyListener(game.eHandle);
 		
-		Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
-		setSize(size);
-		setPreferredSize(size);
-		setMinimumSize(size);
-		setMaximumSize(size);
+		setSize(WIDTH,HEIGHT);
 		//Screen setup
 		//Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocationRelativeTo(null);
-		this.pack();
 		//Screen s = new Screen(d.width, d.height);
 		//game.screen=s;
 		add(game);
 		this.start();
-		try {
+		/*try {
 			//if (!(this.fullScreen && s.setFullScreen(this))) {
 			//s.setScreen(this);
 			//}
@@ -76,7 +71,10 @@ public class Runner extends JFrame implements Runnable {
 			//if(!(this.fullScreen&&s.restoreFullScreen(false)))
 			//s.restoreScreen(this,false);
 			//this.dispose();
-		}
+		}*/
+		
+		this.setLocationRelativeTo(null);
+		this.pack();
 	}
 
     /**
