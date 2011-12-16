@@ -7,6 +7,9 @@ package projekt.event;
 public final class Dialogs {
 	public static final int MAXMESSAGELENGTH=100;
 	public static final class Begin{
+		public static final String story1 ="message. \" 1893 the gods realized that they lost contact withe the humans. The gods have to save the humans from an eternal life in horror and evil. The gods decides to act and picks a random dude that will do their mission and experience an awful fate.\"\t"
+				+ "\"Ranglon, the chosen one, begins an epic journey around the world to spread love and defeat evil. At the evils nest, where the most horrible creature lives -  Fizerlang, our hero dies. The Gods panic and choose a new messenger..\"\t"
+				+ "\"Dud!\"";
 		public static final String sayHello="hej\thej! jag \nheter johannes\n och detta ar ett test pa en lite langre strang, denna text ligger i en statisk klass: Dialogs.Begin.sayHello...\tNytt medelande som ocksa kan vara intressant att lasa :=)";
 	}
 	public static boolean endof=true;

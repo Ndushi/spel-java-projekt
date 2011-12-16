@@ -225,22 +225,24 @@ public class World implements Cloneable {
 	BufferedImage bm = null;
 
 	void drawBackground(Graphics g, int offx, int offy, int lx, int ly) {
-		if (bm == null || (this.id == 1)) {
-			if (this.id == 1) // om världens röda färg är värdet 1
-			{
-				bg = new ImageIcon(getClass().getResource("/res/tree.png").getPath());
-			}
-			bm = new BufferedImage(lx, ly, BufferedImage.TYPE_INT_ARGB);
-			int he = bg.getIconHeight();
-			int wi = bg.getIconWidth();
-			for (int i = 0; i * he < ly * 2; i++) {
-				for (int j = 0; j * wi < lx; j++) {
-					bm.getGraphics().drawImage(bg.getImage(), j * wi - 35, i * he / 2 - 35, null);
+		if( !this.path.contains("/world11") ){
+			if (bm == null ) {
+				if (this.id == 1) // om världens röda färg är värdet 1
+				{
+					bg = new ImageIcon(getClass().getResource("/res/tree.png").getPath());
 				}
+				bm = new BufferedImage(lx, ly, BufferedImage.TYPE_INT_ARGB);
+				int he = bg.getIconHeight();
+				int wi = bg.getIconWidth();
+				for (int i = 0; i * he < ly * 2; i++) {
+					for (int j = 0; j * wi < lx; j++) {
+						bm.getGraphics().drawImage(bg.getImage(), j * wi - 35, i * he / 2 - 35, null);
+					}
+				}
+				this.id = 0;
 			}
-			this.id = 0;
+			g.drawImage(bm, offx - 32, offy - 32, null);
 		}
-		g.drawImage(bm, offx - 32, offy - 32, null);
 	}
 
 	void paint(Graphics g, int x2, int y2, int width, int height) throws ArrayIndexOutOfBoundsException {
@@ -252,7 +254,7 @@ public class World implements Cloneable {
 
 			//BufferedImage im=(BufferedImage)this.alpha.getImage().getSource();//.getGraphics().fillRect(x2/radius, y2/radius, 1, 1);
 		}
-		drawBackground(g, -x2 + 9, -y2 - 9, width * 2, height * 2);
+		//drawBackground(g, -x2 + 9, -y2 - 9, width * 2, height * 2);
 		//g.drawImage(this.alpha, -x2+width/2, -y2 + height/2,this.alpha.getWidth()*radius,this.alpha.getHeight()*radius, null);
 		g.drawImage(this.layout.getImage(), -x2 + width / 2, -y2 + height / 2, null);//0,0,width,height,null);//
 		g.drawImage(this.items, -x2 + width / 2, -y2 + height / 2, null);

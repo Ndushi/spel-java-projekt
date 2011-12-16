@@ -1,13 +1,19 @@
 package render;
 
+import java.awt.AWTException;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import projekt.event.Dialogs;
 import projekt.event.Keys;
 
@@ -18,6 +24,7 @@ import projekt.event.Keys;
 public class Projekt extends Render {
 
 	public boolean loadWorld = false;
+	public Point screenCoords = new Point(0,0);
 	/**
 	 * världens nuvarande egenskaper sparas och ändras i denna variabel.
 	 */
@@ -26,16 +33,13 @@ public class Projekt extends Render {
 	 * focus innehåller information om var karaktären befinner sig och hur världen skall relatera sig till var karaktären är(görs ex med att sätta world.setOffset(int x,int y)
 	 */
 	public Player focus;
-
+	public BufferedImage before;
 	/**
 	 * konstruktorn för spelet
 	 */
 	public Projekt() {
+		requestFocus();
 		focus = new Player(15, 17);
-		String[] s = new String[4];
-		for (int i = 0; i < 4; i++) {
-			s[i] = "/res/CharMain/ts" + i + ".png";
-		}
 		focus.setChar("/res/CharMain/firehero.png");
 		this.world = new World(this.getClass().getResource("/res/worlds/world1").getPath());
 		focus.setOnWalkCallback(new OnWalkCallback() {
@@ -96,7 +100,9 @@ public class Projekt extends Render {
 		if (a) {
 			if (Dialogs.endof && this.pickup(false)) {
 				millidelay = System.currentTimeMillis();
-			} else if (millidelay != 0 && System.currentTimeMillis() - millidelay > 100) {
+			} 
+			if(!Dialogs.endof) {//if(millidelay != 0 && System.currentTimeMillis() - millidelay > 100) {
+				k[Keys.a]=false;
 				this.drawDialog(Dialogs.nextMessage());
 				if (Dialogs.endof) {
 					this.focus.onWalkCallback.onEndWalk();
@@ -113,23 +119,27 @@ public class Projekt extends Render {
 
 		//X-axeln
 		if (this.focus.y - this.focus.y2 / radius == 0 ) {
-			if ((left && !right) && (this.focus.x - this.focus.x2 / radius >= 0) && focus.x >= 1 && this.world.canGo(this.focus.x - 1, this.focus.y)) {
-				focus.x--;
+			if ((left && !right) && (this.focus.x - this.focus.x2 / radius >= 0) && focus.x >= 1) {
+				if( this.world.canGo(this.focus.x - 1, this.focus.y))
+					focus.x--;
 				focus.direciton = 1;
 			}
-			if ((right && !left) && (this.focus.x - this.focus.x2 / radius <= 0) && focus.x2 < world.width * radius - radius && this.world.canGo(this.focus.x + 1, this.focus.y)) {
-				focus.x++;
+			if ((right && !left) && (this.focus.x - this.focus.x2 / radius <= 0) && focus.x2 < world.width * radius - radius) {
+				if(this.world.canGo(this.focus.x + 1, this.focus.y))
+					focus.x++;
 				focus.direciton = 2;
 			}
 		}
 		//Y-axeln
 		 if (this.focus.x - this.focus.x2 / radius == 0 ) {
-			if ((up && !down) && (this.focus.y - this.focus.y2 / radius >= 0) && focus.y > 1 && this.world.canGo(this.focus.x, this.focus.y - 1)) {
-				focus.y--;
+			if ((up && !down) && (this.focus.y - this.focus.y2 / radius >= 0) && focus.y > 1 ) {
+				if(this.world.canGo(this.focus.x, this.focus.y - 1))
+					focus.y--;
 				focus.direciton = 3;
 			}
-			if ((down && !up) && (this.focus.y - this.focus.y2 / radius <= 0) && focus.y >= 1 && focus.y2 < world.height * radius - radius && this.world.canGo(this.focus.x, this.focus.y + 1)) {
-				focus.y++;
+			if ((down && !up) && (this.focus.y - this.focus.y2 / radius <= 0) && focus.y >= 1 && focus.y2 < world.height * radius - radius ) {
+				if (this.world.canGo(this.focus.x, this.focus.y + 1))
+					focus.y++;
 				focus.direciton = 0;
 			}
 		}
@@ -216,39 +226,46 @@ public class Projekt extends Render {
 		int fry = this.focus.y;
 		checkWarp();
 		try {
-			world.paint(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+			world.paint(g, (int) this.focus.x2, (int) this.focus.y2, WIDTH, HEIGHT);
 		} catch (ArrayIndexOutOfBoundsException e) { // positionen är utanför kartan
 			ErrorHandler.CharacterBoundary.CharacterOutOfBoundary();
 			ErrorHandler.CharacterBoundary.resetCharacterPositionAt(this.focus, frx - 1, fry + 1);
 		}
 		try{
 			if((int)focus.frame > 3)focus.frame=0;
-			BufferedImage t = focus.c.getSubimage(radius * (int) (focus.incr > 1.0 && focus.frame != 0 ? (focus.frame + 4)  : focus.frame  ), 20 * focus.direciton, radius, 20);
-			g.drawImage(t, this.getWidth() / 2 - t.getWidth() / 2 - radius / 2 + radius, this.getHeight() / 2 - t.getHeight() - radius / 5 + radius, this);
+			BufferedImage t = focus.c.getSubimage(radius * (int) (focus.incr > 1.0 && focus.frame != 0 ? (focus.frame + 3)  : focus.frame  ), 20 * focus.direciton, radius, 20);
+			g.drawImage(t, WIDTH / 2 - t.getWidth() / 2 - radius / 2 + radius, HEIGHT / 2 - t.getHeight() - radius / 5 + radius, this);
+			
 		}
 		catch( java.awt.image.RasterFormatException e){//om bilden clips utanför bredden, höjden eller är negativ 
 		}
-		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, this.getWidth(), this.getHeight());
+		world.paintTop(g, (int) this.focus.x2, (int) this.focus.y2, WIDTH, HEIGHT);
 		//drawShadowWithString("Version: \u03B1 0.5", 2, 12, Color.white, new Color(0x666666));
 		//new PFont("Alpha - version 0.5", g, 2, 12);
 		if (this.focus.action.equals("dialog")) {
 			g.setColor(new Color(0x666666));
 			//g.setFont(new Font("Lucida Typewriter Regular", Font.BOLD, 12));
-			this.drawDialog(Dialogs.message[Dialogs.getIndex()]);
+			try{
+				this.drawDialog(Dialogs.message[Dialogs.getIndex()]);
+			}
+			catch(NullPointerException e){}
 		}
 		if (tr.index > 0) {
+			if(tr.index<200)
+				dbg.drawImage(before,0,0,this);
+			
 			tr.transition(g);
 		}
-		focus.freeze = tr.index != 0;//tr.index>0;
+		focus.freeze = focus.action.equals("dialog") ||tr.index != 0;//tr.index>0;
 	}
 
 	public void drawDialog(String message) {
 		int b = 5;
 		int m = 8;
 		int y = this.getHeight() / 4;
-		this.dbg.fillRect(0, y * 3, this.getWidth(), y + this.getHeight() % 4);
+		this.dbg.fillRect(0, y * 3, WIDTH, y +HEIGHT % 4);
 		this.dbg.setColor(Color.black);
-		this.dbg.drawRect(b, y * 3 + b, this.getWidth() - 2 * b, y + this.getHeight() % 4 - 2 * b);
+		this.dbg.drawRect(b, y * 3 + b, WIDTH - 2 * b, y + HEIGHT % 4 - 2 * b);
 
 		this.dbg.setFont(new Font(Font.DIALOG, Font.BOLD, 10));
 		String[] lines = message.split("\n");
@@ -278,6 +295,12 @@ public class Projekt extends Render {
 			loadWorld = true;
 			focus.action = "world";
 			focus.freeze = true;
+				
+			try {
+				Robot rbt = new Robot();
+				before=rbt.createScreenCapture(new Rectangle(screenCoords.x,screenCoords.y,406,400));// 2,35
+			} catch (AWTException ex) {
+			}
 			tr.transition(dbg);
 		}
 		if (loadWorld && tr.dirBool) {

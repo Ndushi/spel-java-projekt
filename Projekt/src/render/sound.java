@@ -8,7 +8,7 @@ package render;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import projekt.Main;
+import projekt.Menu;
 
 /**
  *
@@ -20,7 +20,7 @@ public class sound {
 			public void run() {
 				try {
 					Clip clip = AudioSystem.getClip();
-					AudioInputStream inputStream = AudioSystem.getAudioInputStream(Main.class.getResourceAsStream("/res/sounds/"+url));
+					AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/res/sounds/"+url));
 					clip.open(inputStream);
 					clip.start();
 					} 
