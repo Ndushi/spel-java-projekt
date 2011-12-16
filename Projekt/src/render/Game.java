@@ -217,7 +217,7 @@ public class Game extends Render {
     @Override
     public void paint(Graphics g) {
         if (tr == null) {
-            tr = new Transition("slideUpDown");
+            tr = new Transition("fadeOutIn");
         }
         if ((focus.x * focus.radius != focus.x2)) {
             focus.slowMove(0);
