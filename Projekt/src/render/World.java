@@ -7,6 +7,8 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import primitives.House;
 import projekt.event.Keys;
@@ -43,7 +45,7 @@ public class World implements Cloneable {
 	BufferedImage alpha;
 	BufferedImage items;
 	private int id = 0;
-
+	private ArrayList<Player> players = new ArrayList<Player>();
 	/**
 	 * konstruktorn försöker öppna forldern med alla biler och bestämma dess width och height
 	 */
@@ -100,6 +102,12 @@ public class World implements Cloneable {
 							radius, 20),
 							ix * radius, iy * radius - 8, null);
 				}
+				else if((ixy & 0xff) == 255 && ixy != 0xffffffff){
+					Player p = new Player(ix,iy);
+					p.setChar("/res/Players/player"+((ixy >> 16) &0xff)+".png");
+					p.lvl = ((ixy >> 8) & 0xff);
+					players.add(p);
+				}
 			}
 		}
 		this.width = this.alpha.getWidth();
@@ -135,7 +143,8 @@ public class World implements Cloneable {
 				if (t.getIconWidth() > this.pos[0] + radius && t.getIconHeight() > this.pos[1] + radius) {
 					this.loadWorld();
 				}
-				/** @TODO if (Color.RED = 255) new Item(Color.C,Color.M,Color.GREEN,Color.BLUE);
+				/** @TODO LÖS ITEM, PLAYERS SÅ ATT DE INTE KOLLIDERAR MED SAMMA DATA!!!
+				 * if (Color.RED = 255) new Item(Color.C,Color.M,Color.GREEN,Color.BLUE);
 				 * also:
 				 * if (Color.BLUE = 255) new Character(x,y,Color.RED,Color.GREEN);
 				 */
@@ -144,7 +153,7 @@ public class World implements Cloneable {
 				this.pos[2] = -1;
 			}
 		} else {
-			/** @TODO add and thow new ExceptionClass*/
+			// @TODO add code for no portal set here!!!1
 		}
 	}
 
@@ -165,9 +174,13 @@ public class World implements Cloneable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param rgb
+	 * @return om charactärer elle item eller något annat är aktiverat (dvs de reserverade vädena 255,255,255)
+	 */
 	public boolean isEqual(int rgb) {
-		return (((rgb >>> 16) & 0xff) == 255);
-		//return (((rgb>>> 16) & 0xff)+((rgb>>> 8) & 0xff)+(rgb & 0xff))/3 ==((rgb >>> 16) & 0xff);
+		return (((rgb>>> 16) & 0xff)==255) || (((rgb>>> 8) & 0xff) == 255) || (rgb & 0xff) ==255;
 	}
 
 	/**
@@ -177,15 +190,11 @@ public class World implements Cloneable {
 	 */
 	public boolean canGo(int x, int y) {
 		int argb = this.getRGBA(x, y).getRGB();
-		return (argb != 0xff000000 && this.getRGBA(x, y).getBlue() == 0xff && this.isEqual(argb)) || this.isPoortal(x, y);
+		return (argb == 0xffffffff) || this.isPoortal(x, y);
 	}
 
 	public boolean isPoortal(int x, int y) {
-		if (!(this.getRGBA(x, y).getRGB() == 0xffffffff || this.getRGBA(x, y).getRGB() == 0xff000000)) {
-			int i = 0;
-			i++;
-		}
-		if (!(this.getRGBA(x, y).getRGB() == 0xffffffff || this.getRGBA(x, y).getRGB() == 0xff000000)
+		if (this.getRGBA(x, y).getRGB() != 0xffffffff && this.getRGBA(x, y).getRGB() != 0xff000000
 				&& !this.isEqual(this.getRGBA(x, y).getRGB())) {
 			this.pos[0] = this.getRGBA(x, y).getGreen();//x
 			this.pos[1] = this.getRGBA(x, y).getBlue(); //y
@@ -245,6 +254,14 @@ public class World implements Cloneable {
 		}
 	}
 
+	void drawPlayers(Graphics g,int z,boolean over){
+		for(int i=0;i<players.size();i++){
+			if(!over)
+				players.get(i).drawChar(g);
+			else if(players.get(i).y2 >= z)
+				players.get(i).drawChar(g);
+		}
+	}
 	void paint(Graphics g, int x2, int y2, int width, int height) throws ArrayIndexOutOfBoundsException {
 		if (this.getRGBA(x2 / radius, y2 / radius).equals(new Color(0xfbc815))) {
 			Graphics ag = this.alpha.createGraphics();
@@ -269,6 +286,10 @@ public class World implements Cloneable {
 				h[i].paint3D(g, x2, y2, width, height, radius);
 			}
 		}
+		AffineTransform a =((Graphics2D)g).getTransform();
+		g.translate(-x2 + width / 2, -y2 + height / 2);
+		drawPlayers(g, y2,false);
+		((Graphics2D)g).setTransform(a);
 	}
 	House h[] = new House[]{
 		new House(0, 0),
@@ -277,16 +298,13 @@ public class World implements Cloneable {
 		new House(10, 0),
 		new House(20, 0)
 	};
-
-	/** @TODO Dela item-bilden i overlay och underlay, karaktärerna FÖRSVINNER!!!
-	 * 
-	 * 
-	 */
-	/** @TODO Det objektet som har lägst y-värde målas ut först!
-	 * 
-	 */
+	
 	void paintTop(Graphics g, double x2, double y2, int width, int height) {
-		g.drawImage(this.overlay.getImage(), (int) -x2 + width / 2, (int) -y2 + height / 2, null);
+		AffineTransform a =((Graphics2D)g).getTransform();
+		g.translate((int)-x2 + width / 2, (int)-y2 + height / 2);
+		g.drawImage(this.overlay.getImage(), 0, 0, null);
+		drawPlayers(g, (int)y2,true);
+		((Graphics2D)g).setTransform(a);
 	}
 
 	void paint3D(Graphics g, int x2, int y2, int width, int height) {

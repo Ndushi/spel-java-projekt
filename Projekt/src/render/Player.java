@@ -1,5 +1,6 @@
 package render;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -366,4 +367,10 @@ public class Player {
     public void setOnWalkCallback(OnWalkCallback callback) {
         this.onWalkCallback = callback;
     }
+
+	void drawChar(Graphics g) {
+		if((int)frame > 3)frame=0;
+		BufferedImage t = c.getSubimage(radius * (int) (incr > 1.0 && frame != 0 ? (frame + 3)  : frame  ), 20 * direciton, radius, 20);
+		g.drawImage(t, (int)x2, (int)y2-7, null);
+	}
 }
