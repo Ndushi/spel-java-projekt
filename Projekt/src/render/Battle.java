@@ -20,6 +20,10 @@ import projekt.event.Keys;
  */
 public class Battle extends JFrame {
 
+    Image dbImage;
+    Graphics dbg;
+    int menupos = 0;
+    Player me, you;
     public static void main(String[] args) {
         new Battle(new Player(0, 0), new Player(0, 0));
     }
@@ -43,10 +47,6 @@ public class Battle extends JFrame {
             Update(c.getGraphics());
         }
     }
-    Image dbImage;
-    Graphics dbg;
-    int menupos = 0;
-    Player me, you;
 
     private void Update(Graphics g) {
         if (eh.keys[Keys.up]) {
@@ -99,9 +99,10 @@ public class Battle extends JFrame {
         int x = 270, y = 200;
         double meRatio = (double) me.health / (double) me.maxHealth;
         double youRatio = (double) you.health / (double) you.maxHealth;
-        Font normal = new Font("Arial", 1, 11),
-                battle = new Font("Arial", 1, 15);
-
+        PFont normal = new PFont("RANDOM1"),
+                battle = new PFont("RANDOM2");
+	normal.SetColor("black");
+	battle.SetColor("black");
         g.setColor(blk);
         g.fillRoundRect(10, 10, 120, 34, 5, 5); //Motståndarens bakgrundsruta
         g.fillRoundRect(270, 200, 120, 44, 5, 5);	//Spelarens bakgrundsruta
@@ -111,23 +112,22 @@ public class Battle extends JFrame {
 
         //Motståndarens healthbar
         g.setColor(blk);
-        g.setFont(normal);
-        g.drawString(you.name, 20, 25);
-        g.drawString("Lv " + you.lvl, 97, 25);
+        normal.SetString(you.name).PrintAt(g, 20, 17);
+        normal.SetString("Lv " + you.lvl).PrintAt(g, 97, 17);
         g.fillRect(20, 30, 104, 6);
         g.setColor((youRatio > 0.5 ? hltgrn : (youRatio > 0.1 ? hltylw : hltred)));
         g.fillRect(22, 32, (int) Math.round(youRatio * 100), 2);
 
         //Spelarens healthbar
         g.setColor(blk);
-        g.drawString(me.name, x + 10, y + 15);
-        g.drawString("Lv " + me.lvl, x + 87, y + 15);
+        normal.SetString(me.name).PrintAt(g, x + 10, y + 7);
+        normal.SetString("Lv " + me.lvl).PrintAt(g, x + 87, y + 7);
         g.fillRect(x + 10, y + 20, 104, 6);
         g.setColor((meRatio > 0.5 ? hltgrn : (meRatio > 0.1 ? hltylw : hltred)));
         g.fillRect(x + 12, y + 22, (int) Math.round(meRatio * 100), 2);
         g.setColor(blk);
         String str = me.health + "/ " + me.maxHealth;
-        g.drawString(str, (x + 115) - g.getFontMetrics().stringWidth(str), y + 37);
+        normal.SetString(str).PrintAt(g, (x + 107) - g.getFontMetrics().stringWidth(str), y + 29);
 
         //Ovaler, marken
         g.setColor(new Color(0x80E078));
@@ -148,8 +148,7 @@ public class Battle extends JFrame {
         g.setColor(new Color(0x285068));
         g.fillRoundRect(12, 261, 236, 106, 5, 5);
         g.setColor(new Color(0xFFFFFF));
-        new PFont(",.What will " + me.name + " do?", g, 25, 280);
-        //g.drawString("What will "+name.toUpperCase()+" do?", 25, 280);
+        new PFont("What will " + me.name + " do?", g, 25, 273);
         g.setColor(blk);
         g.fillRect(200, 250, 200, 150);
         g.setColor(new Color(0x706880));
@@ -159,11 +158,11 @@ public class Battle extends JFrame {
 
         //Menu items
         g.setColor(blk);
-        g.setFont(battle);
-        g.drawString("ATTACK", 225, 300);
-        g.drawString("ITEMS", 330, 300);
-        g.drawString("MAGIC", 225, 340);
-        g.drawString("RUN", 330, 340);
+        
+        battle.SetString("ATTACK").PrintAt(g, 227, 288);
+        battle.SetString("ITEMS").PrintAt(g, 330, 288);
+        battle.SetString("MAGIC").PrintAt(g, 227, 329);
+        battle.SetString("RUN").PrintAt(g, 330, 329);
 
         //Cursor position
         int[] curpos[] = {new int[]{215, 285}, new int[]{317, 285}, new int[]{215, 325}, new int[]{317, 325}};
