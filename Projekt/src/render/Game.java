@@ -212,15 +212,14 @@ public class Game extends Render {
 				this.focus.action = "dialog";
 				Dialogs.initDialog(Dialogs.Begin.TALK);
 				this.focus.freeze = true;
+				Player cur = world.players.get(0);
+				if(cur.x>focus.x)
+					cur.direciton=1;//Vänster
+				else if(cur.x!=focus.x)cur.direciton = 2;//höger
+				if(cur.y>focus.y)
+					cur.direciton = 3; //upp
+				else if(cur.y!=focus.y)cur.direciton = 0; //ner
 			}
-			if (!pickNow) {
-				return true;
-			}
-			Graphics2D ag = this.world.alpha.createGraphics();
-			ag.setColor(Color.white);
-			//ag.fillRect((int) this.focus.x2 / radius + x, (int) this.focus.y2 / radius + y, 1, 1);
-
-			
 			return true;
 			/** @TODO ADD CODE FOR CHARACTER DIALOG HERE!!!! */
 		}

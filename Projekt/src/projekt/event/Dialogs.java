@@ -14,7 +14,7 @@ public final class Dialogs {
 				+ "\"Ranglon, the chosen one, begins an epic journey around the world to spread love and defeat evil. At the evils nest, where the most horrible creature lives -  Fizerlang, our hero dies. The Gods panic and choose a new messenger..\"\t"
 				+ "\"Dud!\"";
 		public static final String sayHello = "\thej! jag \nheter johannes\n och detta ar ett test pa en lite langre strang, denna text ligger i en statisk klass: Dialogs.Begin.sayHello...\tNytt medelande som ocksa kan vara intressant att lasa :=)";
-		public static final String TALK ="\tHej\n jag ar en Player som du kan prata med!";
+		public static final String TALK ="\tHej jag ar en Player som du kan prata med!";
 	}
 	public static boolean endof = true;
 	public static String[] message;

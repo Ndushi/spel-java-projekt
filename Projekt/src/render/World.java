@@ -45,7 +45,7 @@ public class World implements Cloneable {
 	BufferedImage alpha;
 	BufferedImage items;
 	private int id = 0;
-	private ArrayList<Player> players = new ArrayList<Player>();
+	public ArrayList<Player> players = new ArrayList<Player>();
 	/**
 	 * konstruktorn försöker öppna forldern med alla biler och bestämma dess width och height
 	 */
